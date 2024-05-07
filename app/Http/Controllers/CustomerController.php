@@ -70,7 +70,7 @@ class CustomerController extends Controller
             $customers->Pob = $request->input('Pob');
             $customers->Phone = $request->input('Phone');
             $customers->Address = $request->input('Address');
-            $customers->IsHidden = $request->input('IsHidden');
+            $customers->IsHidden = $request->has('IsHidden') ? $request->input('IsHidden') : 0;
             $customers->save();
             return redirect()->route('customer.index')->with('status','Customer Updated successfully');
         }

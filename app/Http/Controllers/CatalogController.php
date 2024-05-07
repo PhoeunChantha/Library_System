@@ -63,7 +63,7 @@ class CatalogController extends Controller
             $catalogs->Publisher = $request->input('Publisher');
             $catalogs->PublishYear = $request->input('PublishYear');
             $catalogs->PublisheDition = $request->input('PublisheDition');
-            $catalogs->IsHidden = $request->input('IsHidden');
+            $catalogs->IsHidden = $request->has('IsHidden') ? $request->input('IsHidden') : 0;
             $catalogs->save();
             return redirect()->route('catalog.index')->with('status', 'Catalog Updated successfully');
         }

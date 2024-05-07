@@ -19,13 +19,14 @@ return new class extends Migration
             $table->foreign('LibrarianId')->references('LibrarianId')->on('librarians')->onDelete('cascade');
             $table->date('BorrowDate');
             $table->string('BorrowCode', 60);
-            $table->string('Depositamount',10, 2)->nullable();
+            $table->decimal('Depositamount',10, 2)->nullable();
             $table->date('Duedate');
             $table->decimal('FineAmount',10, 2)->nullable();
-            $table->string('Emmo', 50)->nullable();
+            $table->string('Emmo', 100)->nullable();
             $table->boolean('IsHidden')->default(false);
             $table->timestamps();
         });
+
     }
 
     /**

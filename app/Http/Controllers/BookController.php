@@ -12,10 +12,11 @@ use Illuminate\Support\Facades\Redirect;
 class BookController extends Controller
 {
     public function index(){
+
         $books = Book::all();
         $catalogs = Catalog::all();
         $books = Book::with('catalog')->get();
-        return view('Tables.Books.index',compact('catalogs','books'));
+        return view('Tables.Books.index',compact('catalogs','books',));
     }
     public function create(){
         $catalogs = Catalog::all();
@@ -80,7 +81,7 @@ class BookController extends Controller
             $book->BookImage = $imageName;
         }
         $book->BookDescription = $request->input('BookDescription');
-        $book->IsHidden = $request->input('IsHidden');
+        $book->IsHidden = $request->has('IsHidden') ? $request->input('IsHidden') : 0;
         $book->save();
         return Redirect()->route('book.index')->with('status','Book Updated Successfully');
         }

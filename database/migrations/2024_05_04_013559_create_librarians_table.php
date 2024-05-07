@@ -11,20 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
-            $table->id('CustomerId');
-            $table->string('CustomerCode', 500);
-            $table->unsignedBigInteger('CustomerTypeId'); // Use unsignedBigInteger for foreign keys
-            $table->foreign('CustomerTypeId')->references('CustomerTypeId')->on('customertypes')->onDelete('cascade');
-            $table->string('CustomerName', 50);
+        Schema::create('librarians', function (Blueprint $table) {
+            $table->id('LibrarianId');
+            $table->string('LibrarianName', 50);
             $table->string('Sex', 50)->nullable();
             $table->date('Dob')->nullable();
             $table->string('Pob', 50)->nullable();
-            $table->string('Phone', 50)->nullable();
-            $table->string('Address', 500)->nullable();
+            $table->string('Phone', 60)->nullable();
             $table->boolean('IsHidden')->default(false);
             $table->timestamps();
         });
+
     }
 
     /**
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('librarians');
     }
 };

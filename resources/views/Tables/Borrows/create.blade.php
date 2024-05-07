@@ -60,12 +60,18 @@
                                 <textarea id="Emmo" class="form-control" placeholder="Enter your note" name="Emmo"></textarea>
                             </div>
 
-                            <div class="form-check mt-2 ml-3">
+                            {{-- <div class="form-check mt-2 ml-3">
                                 <input type="hidden" name="IsHidden" value="0">
                                 <input type="checkbox" name="IHidden" id="IsHidden" class="form-check-input" value="1">
                                 <label class="form-check-label" for="isHidden">Hidden</label>
+                            </div> --}}
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" value="0" name="IsHidden" id="customSwitch1">
+                                    <label class="custom-control-label" for="customSwitch1">Hidden</label>
+                                    <input type="hidden" id="IsHidden" name="IsHidden" value="1">
+                                </div>
                             </div>
-
                             <button type="submit" class="btn btn-primary mt-3 col-1 ml-3">Save</button>
                         </form>
                     </div>
@@ -73,4 +79,22 @@
             </div>
         </div>
     </div>
+    <script>
+        // Get the checkbox element
+        var checkbox = document.getElementById('customSwitch1');
+        // Get the hidden input element
+        var hiddenInput = document.getElementById('IsHidden');
+
+        // Add event listener to listen for changes in the checkbox
+        checkbox.addEventListener('change', function() {
+            // Toggle the values of the checkbox and hidden input
+            if (this.checked) {
+                checkbox.value = '0';
+                hiddenInput.value = '1';
+            } else {
+                checkbox.value = '1';
+                hiddenInput.value = '0';
+            }
+        });
+    </script>
 @endsection

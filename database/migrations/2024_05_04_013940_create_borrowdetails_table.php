@@ -11,17 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookdetails', function (Blueprint $table) {
-            $table->id('BorrowDetaild');
+        Schema::create('borrowdetails', function (Blueprint $table) {
+            $table->id('BorrowDetailId');
             $table->unsignedBigInteger('BorrowId');
             $table->foreign('BorrowId')->references('BorrowId')->on('borrows')->onDelete('cascade');
             $table->unsignedBigInteger('BookId');
             $table->foreign('BookId')->references('BookId')->on('books')->onDelete('cascade');
+            $table->string('book_ids',50);
             $table->string('Note', 500);
             $table->boolean('IsReturn');
             $table->date('ReturnDate')->nullable();
             $table->timestamps();
         });
+
     }
 
     /**
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookdetails');
+        Schema::dropIfExists('borrowdetails');
     }
 };

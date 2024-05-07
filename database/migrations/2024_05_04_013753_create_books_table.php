@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('IsHidden')->default(false);
             $table->timestamps();
         });
+
     }
 
     /**

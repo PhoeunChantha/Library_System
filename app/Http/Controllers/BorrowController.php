@@ -15,9 +15,10 @@ class BorrowController extends Controller
         $borrows = Borrow::all();
         $customers = Customer::all();
         $librarians = Librarian::all();
+        $totalBorrows = count($borrows);
         $borrows = Borrow::with('customer')->get();
         $borrows = Borrow::with('librarian')->get();
-        return view('Tables.Borrows.index',compact('borrows','customers','librarians'));
+        return view('Tables.Borrows.index',compact('borrows','customers','librarians','totalBorrows'));
     }
     public function create(){
         $customers = Customer::all();
@@ -34,7 +35,7 @@ class BorrowController extends Controller
                 'Depositamount' => 'nullable|numeric|regex:/^\d{1,10}(\.\d{1,2})?$/',
                 'Duedate' => 'required|date',
                 'FineAmount' => 'nullable|numeric|regex:/^\d{1,10}(\.\d{1,2})?$/',
-                'Emmo' => 'nullable|max:50',
+                'Emmo' => 'nullable|max:100',
                 'IsHidden' => 'nullable|boolean'
             ]);
 
@@ -74,7 +75,7 @@ class BorrowController extends Controller
         $borrows->Duedate = $request->input('Duedate');
         $borrows->FineAmount = $request->input('FineAmount');
         $borrows->Emmo = $request->input('Emmo');
-        $borrows->IsHidden = $request->input('IsHidden');
+        $borrows->IsHidden = $request->has('IsHidden') ? $request->input('IsHidden') : 0;
         $borrows->save();
         return redirect()->route('borrow.index')->with('status', 'Borrow updated successfully.');
     }
@@ -82,6 +83,13 @@ class BorrowController extends Controller
         $borrow = Borrow::findOrFail($id);
         $borrow->delete();
         return redirect()->route('borrow.index')->with('status', 'Borrow deleted successfully.');
+
+    }
+    public function show($id){
+        $borrow = Borrow::findOrFail($id);
+        $data = Borrow::with('customer')->get();
+        $data = Borrow::with('librarian')->get();
+        return view('Tables.Borrows.show',compact('borrow'));
 
     }
 }

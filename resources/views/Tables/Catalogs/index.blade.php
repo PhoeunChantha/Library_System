@@ -27,8 +27,12 @@
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-        <table id="" class="table table-bordered table-hover">
+        <table id="catalogTable" class="table  table-hover">
+            @can('create catalog')
             <a href="{{route('catalog.create')}}" class="btn btn-info btn-sm mb-2"><i class="fa-solid fa-plus fa-xl" style="color: #1567f4;"></i>Add</a>
+            @endcan
+            <button type="button" id="showAllBtn" class="btn btn-sm bg-gradient-success float-end">Show All</button>
+
             <thead>
                 <tr>
                     <th>#</th>
@@ -45,7 +49,7 @@
             </thead>
             <tbody>
                 @foreach ($catalogs as $item)
-                    <tr>
+                    <tr class="catalogRow" @if($item->IsHidden == 1) style="display:none;" @endif>
                         <td>{{$item->CatalogId}}</td>
                         <td>{{$item->CatalogCode}}</td>
                         <td>{{ $item->CatalogName}}</td>
@@ -55,18 +59,24 @@
                         <td>{{$item->PublishYear}}</td>
                         <td>{{$item->PublisheDition}}</td>
                         <td>
-                            @if($item->IsHidden == 1)
-                                <i class="fas fa-check " style="color:Green;"></i> <!-- Icon for checked state -->
+                            @if ($item->IsHidden == 1)
+                            {{-- <i class="fas fa-check ml-2" style="color: green;"></i> --}}
+                            <span class="badge bg-danger">Hided</span>
+                            <!-- Green color for checked state -->
                             @else
-                                <i class="fas fa-times" style="color:red;"></i> <!-- Icon for unchecked state -->
+                            {{-- <i class="fas fa-times ml-2" style="color: red;"></i>  --}}
+                                <span class="badge bg-success">showed</span>
                             @endif
                         </td>
                         <td>
-                            {{-- <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#CatalogModal">
-                                <i class="fa-solid fa-eye fa-xl" style="color: #2363d1;"></i>
-                            </button> --}}
+                            @can('view catalog')
                             <a href="{{route('catalog.show',$item->CatalogId)}}" class="btn  btn-sm"> <i class="fa-solid fa-eye fa-xl" style="color: #2363d1;"></i></a>
+
+                            @endcan
+                            @can('update catalog')
                             <a href="{{route('catalog.edit',$item->CatalogId)}}" class="btn  btn-sm"><i class="fa-solid fa-pen-to-square fa-xl" style="color: #63E6BE;"></i></a>
+                            @endcan
+                            @can('delete catalog')
                             <form action="{{ route('catalog.destroy', $item->CatalogId) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
@@ -75,6 +85,9 @@
                                 </button>
 
                             </form>
+                            @endcan
+
+
                         </td>
                     </tr>
                 @endforeach
@@ -90,5 +103,33 @@
     setTimeout(function() {
         document.getElementById('statusAlert').style.display = 'none';
     }, 5000); // Adjust the time as needed (5 seconds in this case)
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#showAllBtn').click(function() {
+            $('.catalogRow').toggle(); // Toggle visibility of all rows
+            // Hide rows where IsHidden is not equal to 1
+            $('.catalogRow').each(function() {
+                if ($(this).find('td:eq(8)').text().trim() != 'Hided') {
+                    $(this).toggle();
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#catalogTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": false,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true
+        });
+    });
 </script>
 @endsection
