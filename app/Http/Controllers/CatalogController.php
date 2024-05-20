@@ -13,10 +13,10 @@ class CatalogController extends Controller
 {
     public function index(){
         $catalogs = Catalog::all();
-        return view('Tables.Catalogs.index',compact('catalogs'));
+        return view('Backends.Catalogs.index',compact('catalogs'));
     }
     public function create(){
-        return view('Tables.Catalogs.create');
+        return view('Backends.Catalogs.create');
     }
     public function store(Request $request){
         try {
@@ -51,7 +51,7 @@ class CatalogController extends Controller
     }
     public function edit($id){
         $data['catalogs'] = Catalog::findOrFail($id);
-        return view('Tables.Catalogs.edit',$data);
+        return view('Backends.Catalogs.edit',$data);
     }
     public function update(Request $request,$id){
         try{
@@ -79,6 +79,6 @@ class CatalogController extends Controller
     }
     public function show($id){
         $catalog = Catalog::findOrFail($id); // Retrieve the catalog item by its ID
-        return view('Tables.Catalogs.show', compact('catalog')); // Pass the catalog item to the view
+        return view('Backends.Catalogs.show', compact('catalog')); // Pass the catalog item to the view
     }
 }

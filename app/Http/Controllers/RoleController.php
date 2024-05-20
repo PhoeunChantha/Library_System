@@ -19,13 +19,13 @@ class RoleController extends Controller
     // }
     public function index(){
         $roles = Role::get();
-        return view('role-permission.role.index',[
+        return view('Backends.role-permission.role.index',[
             'roles' => $roles
         ]);
     }
     public function create(){
 
-        return view('role-permission.role.create');
+        return view('Backends.role-permission.role.create');
     }
     public function store(Request $request){
         $request->validate([
@@ -38,7 +38,7 @@ class RoleController extends Controller
     }
     public function edit(Role $role){
 
-        return view('role-permission.role.edit',[
+        return view('Backends.role-permission.role.edit',[
             'role' => $role
         ]);
 
@@ -64,7 +64,7 @@ class RoleController extends Controller
                             ->where('role_has_permissions.role_id',$role->id)
                             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
                             ->all();
-        return view('role-permission.role.add-permissions',[
+        return view('Backends.role-permission.role.add-permissions',[
             'role' => $role,
             'permissions' => $permissions,
             'rolepermissions' => $rolepermissions

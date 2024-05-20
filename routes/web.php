@@ -46,6 +46,7 @@ Route::group(['middleware' => ['isAdmin']], function () {
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::get('users/{userId}/delete', [UserController::class, 'destroy']);
 
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('front.home');
     // Route::get('/Dashboard', [DashboardController::class, 'customer'])->name('customer.index');
     //Customers
@@ -107,4 +108,4 @@ Route::group(['middleware' => ['isAdmin']], function () {
 Auth::routes();
 
 // Route::get('/', [LoginController::class, 'index'])->name('login');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

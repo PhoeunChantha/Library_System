@@ -10,9 +10,9 @@ class Book extends Model
     use HasFactory;
     protected $primaryKey = 'BookId';
     protected $guarded = [];
+    
     public function catalog()
     {
-
         return $this->belongsTo(Catalog::class, 'CatalogId');
     }
     // public function borrowDetails()

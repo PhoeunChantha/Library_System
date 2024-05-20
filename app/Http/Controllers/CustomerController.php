@@ -14,12 +14,12 @@ class CustomerController extends Controller
         $data['customers'] = Customer::all();
         $data['customertypes'] = CustomerType::all();
         $data['customers'] = Customer::with('customerType')->get();
-        return view('Tables.Customers.index',$data);
+        return view('Backends.Customers.index',$data);
     }
     public function create(){
 
         $data['customertypes'] = CustomerType::all();
-        return view('Tables.Customers.create',$data);
+        return view('Backends.Customers.create',$data);
     }
     public function store(Request $request){
         try{
@@ -57,7 +57,7 @@ class CustomerController extends Controller
     public function edit($id){
         $data['customers'] = Customer::findOrFail($id);
         $data['customertypes'] = CustomerType::all();
-        return view('Tables.Customers.edit',$data);
+        return view('Backends.Customers.edit',$data);
     }
     public function update(Request $request,$id){
         try{
@@ -87,6 +87,6 @@ class CustomerController extends Controller
     public function show($id){
         $customer = Customer::findOrFail($id);
         $data = Customer::with('customerType')->get();
-        return view('Tables.Customers.show',compact('customer'));
+        return view('Backends.Customers.show',compact('customer'));
     }
 }

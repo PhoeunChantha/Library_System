@@ -9,13 +9,13 @@ class PermissionController extends Controller
 {
     public function index(){
         $permissions = Permission::get();
-        return view('role-permission.permission.index',[
+        return view('Backends.role-permission.permission.index',[
             'permissions' => $permissions
         ]);
     }
     public function create(){
 
-        return view('role-permission.permission.create');
+        return view('Backends.role-permission.permission.create');
     }
     public function store(Request $request){
         $request->validate([
@@ -28,7 +28,7 @@ class PermissionController extends Controller
     }
     public function edit(Permission $permission){
 
-        return view('role-permission.permission.edit',[
+        return view('Backends.role-permission.permission.edit',[
             'permission' => $permission
         ]);
 

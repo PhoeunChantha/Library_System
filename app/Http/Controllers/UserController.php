@@ -4,58 +4,39 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\User;
+use App\Exports\UsersExport;
+use App\Models\Librarian;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class UserController extends Controller
 {
     public function index()
     {
+        // $users = User::with(['librarian' => function ($query) {
+        //     $query->withDefault(['LibrarianName' => 'No Librarian']);
+        // }])->get();
         $users = User::get();
-        return view('role-permission.user.index', [
+        return view('Backends.role-permission.user.index', [
             'users' => $users
+
         ]);
     }
     public function create()
     {
         $roles = Role::pluck('name', 'name')->all();
-        return view('role-permission.user.create', [
+        return view('Backends.role-permission.user.create', [
             'roles' => $roles
+
         ]);
     }
     public function store(Request $request)
     {
-        // try{
-        //     $request->validate([
-        //         'name' => 'required|string|max:255',
-        //         'email' => 'required|email|max:255|unique:users,email',
-        //         'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        //         'password' => 'required|string|min:8|max:20',
-        //         'roles' => 'required'
-        //     ]);
-        //     $user = new User();
-
-        //     if ($request->hasFile('profile')) {
-        //         $image = $request->file('profile');
-        //         $imageName = time() . '.' . $image->getClientOriginalExtension();
-        //         $image->move(public_path('P_images'), $imageName);
-        //         $user->profile = $imageName;
-        //     }
-
-        //     $user = User::create([
-        //         'name'=>$request->name,
-        //         'email'=>$request->email,
-
-        //         'password'=>Hash::make($request->password),
-        //     ]);
-        //     $user->syncRoles($request->roles);
-        // }catch(Exception $ex){
-        //     Log::error($ex->getMessage());
-        //     return response()->json(['message' => $ex->getMessage()], 500);
-        // }
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
@@ -93,7 +74,7 @@ class UserController extends Controller
         // // Decrypt the password
         //  $decryptedPassword = Crypt::decrypt($user->password);
         // $userRoles = $user->roles->pluck('name','name')->all();
-        return view('role-permission.user.edit', [
+        return view('Backends.role-permission.user.edit', [
             'user' => $user,
             'roles' => $roles,
             // 'userRoles'=>$userRoles

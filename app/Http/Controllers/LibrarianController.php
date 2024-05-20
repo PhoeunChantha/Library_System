@@ -12,12 +12,12 @@ class LibrarianController extends Controller
     public function index()
     {
        $librarians = Librarian::all();
-        return view('Tables.Librarians.index',compact('librarians'));
+        return view('Backends.Librarians.index',compact('librarians'));
     }
     public function create()
     {
 
-        return view('Tables.Librarians.create');
+        return view('Backends.Librarians.create');
     }
     public function store(Request $request)
     {
@@ -46,7 +46,7 @@ class LibrarianController extends Controller
     public function edit($id)
     {
         $librarian = Librarian::findOrFail($id);
-        return view('Tables.Librarians.edit', compact('librarian'));
+        return view('Backends.Librarians.edit', compact('librarian'));
     }
     public function update(Request $request, $id)
     {
@@ -80,6 +80,6 @@ class LibrarianController extends Controller
     }
     public function show($id){
         $librarian = Librarian::findOrFail($id);
-        return view('Tables.Librarians.show',compact('librarian'));
+        return view('Backends.Librarians.show',compact('librarian'));
     }
 }

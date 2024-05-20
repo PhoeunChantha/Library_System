@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index(){
+
         $borrows = Borrow::all();
         $totalBorrows = count($borrows);
         $totalReturns = BorrowDetail::where('IsReturn', 1)->count();
@@ -24,17 +25,12 @@ class DashboardController extends Controller
         $totalCustomers = count($customers);
         $users = User::all();
         $totalUsers = count($users);
-        return view('index',compact(
+        return view('Backends.index',compact(
             'totalBorrows',
             'borrows',
             'totalReturns',
             'totalBooks',
             'totalLibrarians',
-            'totalCustomers','totalUsers'));
-    }
-
-    public function customer(){
-
-        return view('Tables.Customers.index');
+            'totalCustomers','totalUsers','books'));
     }
 }

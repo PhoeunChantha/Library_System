@@ -9,10 +9,10 @@ class CustomerTypeController extends Controller
 {
     public function index(){
         $data['customertypes']=CustomerType::all();
-        return view('Tables.Customertypes.index',$data);
+        return view('Backends.Customertypes.index',$data);
     }
     public function create(){
-        return view('Tables.Customertypes.Create');
+        return view('Backends.Customertypes.Create');
     }
     public function store(Request $request){
         $request->validate([
