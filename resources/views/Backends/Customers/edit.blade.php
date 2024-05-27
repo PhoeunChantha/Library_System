@@ -78,13 +78,13 @@
                             <label for="Address">Address</label>
                             <input type="text" name="Address" id="Address" class="form-control" maxlength="500" value="{{ $customers->Address }}">
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input" value="1" name="IsHidden" id="customSwitch1"   {{ $customers->IsHidden == 1 ? 'checked' : '' }}>
                                 <label class="custom-control-label" for="customSwitch1">Hidden</label>
                                 <input type="hidden" id="IsHidden" name="IsHidden" value="0">
                             </div>
-                        </div>
+                        </div> --}}
                         <button type="submit" id="updateButton" class="btn btn-primary col-1 ml-2">Update</button>
                     </form>
                 </div>
@@ -94,7 +94,7 @@
         </div>
     </div>
 </div>
-<script>
+{{-- <script>
     // Get the checkbox element
     var checkbox = document.getElementById('customSwitch1');
     // Get the hidden input element
@@ -109,5 +109,5 @@
             hiddenInput.value = '0';
         }
     });
-</script>
+</script> --}}
 @endsection

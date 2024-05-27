@@ -5,83 +5,84 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Book;
 use App\Models\Catalog;
+use App\Models\BorrowDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
+    // public function index()
+    // {
+    //     $borrowDetails = BorrowDetail::all();
+    //     $items = Book::all();
+    //     $totalItems = $items->count();
+    //     $books = Book::with('catalog')->get();
+    //     $selectedBookCodes = BorrowDetail::pluck('book_ids');
+    //     return view('Backends.Books.index', compact('books', 'items', 'totalItems', 'selectedBookCodes', 'borrowDetails'));
+    // }
     public function index()
     {
         $books = Book::with('catalog')->get();
-        return view('Backends.Books.index', compact('books',));
+        // Fetch all borrow details
+        $borrowDetails = BorrowDetail::all();
+
+        // Fetch all books
+        $books = Book::all();
+        $totalItems = $books->count();
+
+        // Fetch book IDs that are currently borrowed (IsReturn = 0)
+        $borrowedBookIds = BorrowDetail::where('IsReturn', 0)
+            ->pluck('book_ids')
+            ->map(function ($bookIds) {
+                return json_decode($bookIds, true); // Decode JSON to array
+            })
+            ->flatten() // Flatten nested arrays
+            ->unique() // Ensure unique values
+            ->toArray(); // Convert to array
+
+        // Fetch book IDs that have been returned (IsReturn = 1)
+        $returnedBookIds = BorrowDetail::where('IsReturn', 1)
+            ->pluck('book_ids')
+            ->map(function ($bookIds) {
+                return json_decode($bookIds, true); // Decode JSON to array
+            })
+            ->flatten() // Flatten nested arrays
+            ->unique() // Ensure unique values
+            ->toArray(); // Convert to array
+
+        // Update the IsHidden status for books that are currently borrowed
+        Book::whereIn('BookId', $borrowedBookIds)->update(['IsHidden' => 0]);
+
+        // Update the IsHidden status for books that have been returned
+        Book::whereIn('BookId', $returnedBookIds)->update(['IsHidden' => 1]);
+
+        // Fetch the books with catalog relationships
+        $books = Book::with('catalog')->get();
+
+        // Fetch the selected book codes from BorrowDetail
+        $selectedBookCodes = BorrowDetail::pluck('book_ids');
+
+        return view('Backends.Books.index', compact('books', 'totalItems', 'selectedBookCodes', 'borrowDetails'));
     }
+
     public function create()
     {
         $catalogs = Catalog::all()->pluck('CatalogName', 'CatalogId');
         return view('Backends.Books.create', compact('catalogs'));
     }
-    // public function store(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'BookName' => 'required|string|max:60',
-    //         'BookCode' => 'required|string|max:60',
-    //         'CatalogId' => 'required|exists:catalogs,CatalogId',
-    //         'BookImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //         'BookDescription' => 'required|string|max:60',
-    //         'IsHidden' => 'nullable|boolean'
-    //     ]);
-    //     if ($validator->fails()) {
-    //         return redirect()->back()
-    //             ->withErrors($validator)
-    //             ->withInput()
-    //             ->with(['success' => 0, 'msg' => __('Invalid form input')]);
-    //     }
-    //     try {
-    //         $Book = new Book();
-    //         $Book->BookName = $request->input('BookName');
-    //         $Book->BookCode = $request->input('BookCode');
-    //         $Book->CatalogId = $request->input('CatalogId');
-    //         if ($request->hasFile('BookImage')) {
-    //             $image = $request->file('BookImage');
-    //             $imageName = time() . '.' . $image->getClientOriginalExtension();
-    //             $image->move(public_path('images'), $imageName);
-    //             $Book->BookImage = $imageName;
-    //         }
-    //         $Book->BookDescription = $request->input('BookDescription');
-    //         $Book->IsHidden = $request->input('IsHidden');
 
-
-    //         $Book->save();
-    //         DB::commit();
-    //         $output = [
-    //             'success' => 1,
-    //             'msg' => __('Created successfully')
-    //         ];
-    //     } catch (Exception $ex) {
-    //         dd($ex);
-    //         DB::rollBack();
-    //         $output = [
-    //             'success' => 0,
-    //             'msg' => __('Something went wrong')
-    //         ];
-    //         // Log::error($ex->getMessage());
-    //         // return response()->json(['message' => $ex->getMessage()], 500);
-    //     }
-    //     //return Redirect()->route('book.index')->with('status', 'Book Created Successfully');
-    //     return Redirect()->route('book.index')->with($output);
-    // }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'BookName' => 'required|string|max:60',
             'BookCode' => 'required|string|max:60',
             'CatalogId' => 'required|exists:catalogs,CatalogId',
             'BookImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'BookDescription' => 'nullable|string|max:60',
-            'IsHidden' => 'nullable|boolean'
+            //  'IsHidden' => 'nullable|boolean'
         ]);
 
         if ($validator->fails()) {
@@ -95,7 +96,6 @@ class BookController extends Controller
             DB::beginTransaction();
 
             $Book = new Book();
-            $Book->BookName = $request->input('BookName');
             $Book->BookCode = $request->input('BookCode');
             $Book->CatalogId = $request->input('CatalogId');
             if ($request->hasFile('BookImage')) {
@@ -105,7 +105,7 @@ class BookController extends Controller
                 $Book->BookImage = $imageName;
             }
             $Book->BookDescription = $request->input('BookDescription');
-            $Book->IsHidden = $request->input('IsHidden', 0);
+            //  $Book->IsHidden = $request->input('IsHidden', 0);
 
             $Book->save();
             DB::commit();
@@ -135,19 +135,17 @@ class BookController extends Controller
     {
         // Validate the incoming request data
         $request->validate([
-            'BookName' => 'required|string|max:255',
             'BookCode' => 'required|string|max:255',
             'CatalogId' => 'required|exists:catalogs,CatalogId',
             'BookImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'BookDescription' => 'nullable|string',
-            'IsHidden' => 'boolean'
+            // 'IsHidden' => 'boolean'
         ]);
 
         try {
             DB::beginTransaction();
 
             $book = Book::findOrFail($id);
-            $book->BookName = $request->input('BookName');
             $book->BookCode = $request->input('BookCode');
             $book->CatalogId = $request->input('CatalogId');
 
@@ -169,7 +167,7 @@ class BookController extends Controller
             }
 
             $book->BookDescription = $request->input('BookDescription');
-            $book->IsHidden = $request->has('IsHidden') ? $request->input('IsHidden') : 0;
+            //  $book->IsHidden = $request->has('IsHidden') ? $request->input('IsHidden') : 0;
 
             $book->save();
 
@@ -231,11 +229,30 @@ class BookController extends Controller
         }
     }
 
-
     public function show($id)
     {
         $book = Book::findOrFail($id);
         $books = Book::with('catalog')->get();
         return view('Backends.Books.show', compact('book'));
+    }
+
+    public function updateStatus(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $book = Book::findOrFail($request->id);
+            $book->IsHidden = $request->IsHidden;
+            $book->save();
+
+            $output = ['IsHidden' => 1, 'msg' => __('Update data successfully')];
+
+            DB::commit();
+        } catch (Exception $e) {
+            $output = ['IsHidden' => 0, 'msg' => __('Something went wrong')];
+            DB::rollBack();
+        }
+
+        return response()->json($output);
     }
 }

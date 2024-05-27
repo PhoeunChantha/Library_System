@@ -1,25 +1,24 @@
 @extends('Backends.master')
 
 @section('content')
-<style>
-    a {
-        text-decoration: none;
-        color: gray;
-    }
-
-</style>
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h3>{{ __('Add New Customer') }}</h3>
-            </div>
-            <div class="col-sm-6" style="text-align: right">
+    <style>
+        a {
+            text-decoration: none;
+            color: gray;
+        }
+    </style>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3>{{ __('Add New Customer') }}</h3>
+                </div>
+                <div class="col-sm-6" style="text-align: right">
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -30,22 +29,40 @@
                             @csrf
 
                             <div class="form-group col-md-6">
-                                <label for="customerCode">Customer Code</label>
-                                <input type="text" name="CustomerCode" id="customerCode" class="form-control" required>
+                                <label for="CustomerCode">Customer Code</label>
+                                <input type="text" name="CustomerCode" id="customerCode"
+                                    class="form-control  @error('CustomerCode') is-invalid @enderror"
+                                    value="{{ old('CustomerCode') }}">
+                                @error('CustomerCode')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label for="CustomerTypeId">Customer Type</label>
-                                <select name="CustomerTypeId" id="CustomerTypeId" class="form-control" required>
+                                <select name="CustomerTypeId" id="CustomerTypeId"
+                                    class="form-control @error('CustomerTypeId')
+                                is-invalid
+                                @enderror">
+                                    <option value="Select Type">Select Type</option>
                                     @foreach ($customertypes as $customerType)
                                         <option value="{{ $customerType->CustomerTypeId }}">
                                             {{ $customerType->CustomerTypeName }}</option>
                                     @endforeach
+                                    @error('CustomerTypeId')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="CustomerName">Customer Name</label>
-                                <input type="text" name="CustomerName" id="CustomerName" class="form-control" required>
+                                <input type="text" name="CustomerName" id="CustomerName"
+                                    class="form-control @error('CustomerName')
+                                is-invalid
+                                @enderror">
+                                @error('CustomerName')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="Sex">Sex</label>
@@ -67,22 +84,40 @@
 
                             <div class="form-group col-md-6">
                                 <label for="Phone">Phone</label>
-                                <input type="text" name="Phone" id="Phone" class="form-control" maxlength="50">
+                                <input type="text" name="Phone" id="Phone"
+                                    class="form-control @error('Phone')
+                                is-invalid
+                                @enderror"
+                                    maxlength="50">
+                                @error('Phone')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label for="Address">Address</label>
-                                <input type="text" name="Address" id="Address" class="form-control" maxlength="500">
+                                <input type="text" name="Address" id="Address"
+                                    class="form-control @error('Address')
+                                is-invalid
+                                @enderror"
+                                    maxlength="500">
+                                @error('Address')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
+
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" value="1" name="IsHidden" id="customSwitch1">
+                                    <input type="checkbox" class="custom-control-input" value="1" name="IsHidden"
+                                        id="customSwitch1">
                                     <label class="custom-control-label" for="customSwitch1">Hidden</label>
                                     <input type="hidden" id="IsHidden" name="IsHidden" value="0">
                                 </div>
+                            </div> --}}
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary col-1 ml-2">Save</button>
                             </div>
-                            <button type="submit" class="btn btn-primary col-1 ml-2">Save</button>
                         </form>
                     </div>
                 </div>
@@ -91,7 +126,7 @@
             </div>
         </div>
     </div>
-    <script>
+    {{-- <script>
         // Get the checkbox element
         var checkbox = document.getElementById('customSwitch1');
         // Get the hidden input element
@@ -106,5 +141,5 @@
                 hiddenInput.value = '0';
             }
         });
-    </script>
+    </script> --}}
 @endsection

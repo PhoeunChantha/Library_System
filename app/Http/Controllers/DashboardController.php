@@ -8,7 +8,9 @@ use App\Models\Borrow;
 use App\Models\Customer;
 use App\Models\Librarian;
 use App\Models\BorrowDetail;
+use App\Models\Catalog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -25,6 +27,7 @@ class DashboardController extends Controller
         $totalCustomers = count($customers);
         $users = User::all();
         $totalUsers = count($users);
+        $books = Book::with('catalog')->get();
         return view('Backends.index',compact(
             'totalBorrows',
             'borrows',

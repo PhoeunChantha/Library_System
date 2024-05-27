@@ -1,30 +1,29 @@
 @extends('Backends.master')
 
 @section('content')
-<style>
-    a {
-        text-decoration: none;
-        color: gray;
-    }
-
-</style>
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h3>{{ __('Add New Librarian') }}</h3>
-            </div>
-            <div class="col-sm-6" style="text-align: right">
+    <style>
+        a {
+            text-decoration: none;
+            color: gray;
+        }
+    </style>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3>{{ __('Add New Librarian') }}</h3>
+                </div>
+                <div class="col-sm-6" style="text-align: right">
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Librarian Information</div>
+                    <div class="card-header text-white" style="background-color:  rgba(173, 72, 0, 1)">Librarian Information</div>
 
                     <div class="card-body">
                         <form class="row"  method="POST" action="{{ route('librarian.store') }}">
@@ -32,7 +31,10 @@
 
                             <div class="form-group col-md-6">
                                 <label for="librarianName">Librarian Name</label>
-                                <input type="text" name="LibrarianName" id="librarianName" class="form-control" required>
+                                <input type="text" name="LibrarianName" id="librarianName" class="form-control  @error('LibrarianName') is-invalid @enderror">
+                                @error('LibrarianName')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <div class="form-group col-md-6">
@@ -56,17 +58,23 @@
 
                             <div class="form-group col-md-6">
                                 <label for="Phone">Phone</label>
-                                <input type="text" name="Phone" id="Phone" class="form-control" maxlength="60">
+                                <input type="text" name="Phone" id="Phone" class="form-control @error('Phone') is-invalid @enderror" maxlength="60">
+                                @error('Phone')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" value="1" name="IsHidden" id="customSwitch1">
+                                    <input type="checkbox" class="custom-control-input" value="1" name="IsHidden"
+                                        id="customSwitch1">
                                     <label class="custom-control-label" for="customSwitch1">Hidden</label>
                                     <input type="hidden" id="IsHidden" name="IsHidden" value="0">
                                 </div>
+                            </div> --}}
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary col-1 ml-2">Save</button>
                             </div>
-                            <button type="submit" class="btn btn-primary col-1 ml-2">Save</button>
                         </form>
                     </div>
                 </div>
@@ -75,7 +83,7 @@
             </div>
         </div>
     </div>
-    <script>
+    {{-- <script>
         // Get the checkbox element
         var checkbox = document.getElementById('customSwitch1');
         // Get the hidden input element
@@ -90,5 +98,5 @@
                 hiddenInput.value = '0';
             }
         });
-    </script>
+    </script> --}}
 @endsection

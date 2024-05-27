@@ -47,21 +47,11 @@
                         <form method="POST" class="row" action="{{ route('book.store') }}"
                             enctype="multipart/form-data">
                             @csrf
-
-                            <div class="form-group col-md-6">
-                                <label for="BookName">Book Name</label>
-                                <input type="text" name="BookName" id="BookName" class="form-control @error('BookName') is-invalid
-                                @enderror" value="{{old('BookName')}}">
-                                @error('BookName')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
                             <div class="form-group col-md-6">
                                 <label for="BookCode">Book Code</label>
-                                <input type="text" name="BookCode" id="BookCode" class="form-control @error('BookCode') is-invalid
-                                @enderror" >{{old('BookCode')}}
+                                <input type="text" name="BookCode" id="BookCode"
+                                    class="form-control @error('BookCode') is-invalid
+                                @enderror">{{ old('BookCode') }}
                                 @error('BookCode')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -72,8 +62,9 @@
                                 <label class="required_lable" for="CatalogId">{{ __('Catalog') }}</label>
                                 <select name="CatalogId" id="CatalogId"
                                     class="form-control select2 @error('CatalogId') is-invalid
-                                @enderror">{{ old('CatalogId') }}
-                                    <option value="">{{ __('Select Categories') }}</option>
+                                @enderror"
+                                   >{{ old('CatalogId') }}
+                                   <option value="">{{ __('Select CatalogName') }}</option>
                                     @foreach ($catalogs as $CatalogId => $CatalogName)
                                         <option value="{{ $CatalogId }}">{{ $CatalogName }}</option>
                                     @endforeach
@@ -111,14 +102,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" value="1" name="IsHidden"
-                                        id="customSwitch1">
-                                    <label class="custom-control-label" for="customSwitch1">Hidden</label>
-                                    <input type="hidden" id="IsHidden" name="IsHidden" value="0">
-                                </div>
+                                <button type="submit" class="btn btn-primary col-1 ml-2">Save</button>
                             </div>
-                            <button type="submit" class="btn btn-primary col-1 ml-2">Save</button>
                         </form>
                     </div>
                 </div>
@@ -144,31 +129,4 @@
             reader.readAsDataURL(file);
         }
     </script>
-    <script>
-        // Get the checkbox element
-        var checkbox = document.getElementById('customSwitch1');
-        // Get the hidden input element
-        var hiddenInput = document.getElementById('IsHidden');
-
-        // Add event listener to listen for changes in the checkbox
-        checkbox.addEventListener('change', function() {
-            // Toggle the values of the hidden input based on the checkbox state
-            if (this.checked) {
-                hiddenInput.value = '1';
-            } else {
-                hiddenInput.value = '0';
-            }
-        });
-    </script>
-    {{-- <script>
-        function previewImage(event) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var output = document.getElementById('preview');
-                output.src = reader.result;
-                output.style.display = 'block';
-            }
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    </script> --}}
 @endsection

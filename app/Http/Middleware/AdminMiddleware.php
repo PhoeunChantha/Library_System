@@ -12,18 +12,19 @@ class AdminMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        return $next($request);
-        if(Auth::check()){
-            /**@var App\Models\User */
+        if (Auth::check()) {
+            /** @var \App\Models\User $user */
             $user = Auth::user();
-            if($user->hasRole(['super-admin','admin','user','staff'])){
+            if ($user->hasRole(['super-admin', 'admin', 'staff'])) {
                 return $next($request);
             }
-            abort(403,"User does not have correct role");
+            abort(403, "User does not have correct role");
         }
         abort(401);
     }

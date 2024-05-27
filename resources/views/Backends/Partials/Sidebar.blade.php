@@ -76,7 +76,10 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('librarian.index') }}"
-                        class="nav-link @if (request()->routeIs('librarian.index')) active @endif">
+                        class="nav-link @if (request()->routeIs('librarian.index') ||
+                                request()->routeIs('librarian.create') ||
+                                request()->routeIs('librarian.edit') ||
+                                request()->routeIs('librarian.show')) active @endif">
                         <i class="nav-icon fa-solid fa-user-tie"></i>
                         <p>
                             Librarian
@@ -84,7 +87,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item @if (request()->routeIs('customer.index*') || request()->routeIs('customertype.index*')) menu-is-opening menu-open @endif">
+                {{-- <li class="nav-item @if (request()->routeIs('customer.index*') || request()->routeIs('customertype.index*')) menu-is-opening menu-open @endif">
                     <a href="#" class="nav-link @if (request()->routeIs('customer.index*') || request()->routeIs('customertype.index*')) active @endif">
                         <i class="nav-icon fa-solid fa-user-group"></i>
                         <p>
@@ -108,10 +111,39 @@
                             </a>
                         </li>
                     </ul>
+                </li> --}}
+                <li class="nav-item @if (request()->routeIs('customer.*') || request()->routeIs('customertype.*')) menu-is-opening menu-open @endif">
+                    <a href="#" class="nav-link @if (request()->routeIs('customer.*') || request()->routeIs('customertype.*')) active @endif">
+                        <i class="nav-icon fa-solid fa-user-group"></i>
+                        <p>
+                            Manage Customer
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('customer.index') }}"
+                                class="nav-link @if (request()->routeIs('customer.*')) active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Customer List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('customertype.index') }}"
+                                class="nav-link @if (request()->routeIs('customertype.*')) active @endif">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Customer Type</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
+
                 <li class="nav-item">
                     <a href="{{ route('book.index') }}"
-                        class="nav-link @if (request()->routeIs('book.index')) active @endif">
+                        class="nav-link @if (request()->routeIs('book.index') ||
+                                request()->routeIs('book.create') ||
+                                request()->routeIs('book.edit') ||
+                                request()->routeIs('book.show')) active @endif">
                         <i class="nav-icon fa-solid fa-book"></i>
                         <p>
                             Book
@@ -121,7 +153,10 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('catalog.index') }}"
-                        class="nav-link @if (request()->routeIs('catalog.index')) active @endif">
+                        class="nav-link @if (request()->routeIs('catalog.index') ||
+                                request()->routeIs('catalog.create') ||
+                                request()->routeIs('catalog.edit') ||
+                                request()->routeIs('catalog.show')) active @endif">
                         <i class="nav-icon fa-solid fa-book-bookmark"></i>
                         <p>
                             Catalog
@@ -129,11 +164,19 @@
                         </p>
                     </a>
                 </li>
-
-
-
-                <li class="nav-item @if (request()->routeIs('borrow.index*') || request()->routeIs('borrowdetail.index*')) menu-is-opening menu-open @endif">
-                    <a href="#" class="nav-link @if (request()->routeIs('borrow.index*') || request()->routeIs('borrowdetail.index*')) active @endif">
+                <li class="nav-item">
+                    <a href="{{ route('borrow.index') }}"
+                        class="nav-link @if (request()->routeIs('borrow.index') ||
+                                request()->routeIs('borrow.create') ||
+                                request()->routeIs('borrow.edit') ||
+                                request()->routeIs('borrow.show')) active @endif">
+                        {{-- <i class="nav-icon fa-solid fa-book-bookmark"></i> --}}
+                        <i class="nav-icon fa-solid fa-hand-holding"></i>
+                        <p>Borrow List</p>
+                    </a>
+                </li>
+                {{-- <li class="nav-item @if (request()->routeIs('borrow.*') || request()->routeIs('borrowdetail.*')) menu-is-opening menu-open @endif">
+                    <a href="#" class="nav-link @if (request()->routeIs('borrow.*') || request()->routeIs('borrowdetail.*')) active @endif">
                         <i class="nav-icon fa-solid fa-hand-holding-hand"></i>
                         <p>
                             Manage Borrow
@@ -143,21 +186,20 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('borrow.index') }}"
-                                class="nav-link @if (request()->routeIs('borrow.index*')) active @endif">
+                                class="nav-link @if (request()->routeIs('borrow.*')) active @endif">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Borrow List</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('borrowdetail.index') }}"
-                                class="nav-link @if (request()->routeIs('borrowdetail.index*')) active @endif">
+                                class="nav-link @if (request()->routeIs('borrowdetail.*')) active @endif">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Borrow Detail</p>
                             </a>
                         </li>
                     </ul>
-                </li>
-
+                </li> --}}
 
                 <li class="nav-item @if (request()->routeIs('permissions*') || request()->routeIs('roles*') || request()->routeIs('users*')) menu-is-opening menu-open @endif">
                     <a href="#" class="nav-link @if (request()->routeIs('permissions*') || request()->routeIs('roles*') || request()->routeIs('users*')) active @endif">
@@ -191,7 +233,6 @@
                         </li>
                     </ul>
                 </li>
-
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

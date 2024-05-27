@@ -1,17 +1,17 @@
 @extends('Backends.master')
 @section('content')
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h3>{{ __('All CustomerTypes List') }}</h3>
-            </div>
-            <div class="col-sm-6" style="text-align: right">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3>{{ __('All CustomerTypes List') }}</h3>
+                </div>
+                <div class="col-sm-6" style="text-align: right">
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
     <div class="card ">
         <div class="card-header">
             <h3 class="card-title">CustomerType </h3>
@@ -39,7 +39,7 @@
                 <tbody>
                     @foreach ($customertypes as $item)
                         <tr>
-                            <td>{{ $item->CustomerTypeId }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->CustomerTypeName }}</td>
 
                             <td>
@@ -92,12 +92,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
-    <script>
-        // Close the alert after 5 seconds (5000 milliseconds)
-        setTimeout(function() {
-            document.getElementById('statusAlert').style.display = 'none';
-        }, 5000); // Adjust the time as needed (5 seconds in this case)
     </script>
     <script>
         function confirmDelete() {

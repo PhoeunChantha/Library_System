@@ -41,6 +41,23 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return \Illuminate\Http\Response
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        if (!$user->hasRole(['super-admin', 'admin', 'staff'])) {
+            Auth::logout(); // Log out the user
+            return redirect()->route('unauthorized'); // Redirect to unauthorized page
+        }
+        return redirect()->intended($this->redirectPath());
+    }
+
     use AuthenticatesUsers;
 
     /**
@@ -72,18 +89,6 @@ class LoginController extends Controller
     }
 
     /**
-     * Send the response after the user was authenticated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return \Illuminate\Http\Response
-     */
-    protected function authenticated(Request $request, $user)
-    {
-        // Custom logic after successful login
-    }
-
-    /**
      * Get the failed login response instance.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -109,5 +114,4 @@ class LoginController extends Controller
     {
         return 'name';
     }
-
 }

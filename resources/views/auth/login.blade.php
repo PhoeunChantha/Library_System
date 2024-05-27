@@ -1,23 +1,9 @@
 @extends('layouts.app')
-
-@push('css')
     <style>
-        .profile {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-        }
-
-        .banner img {
-            width: 100%;
-            height: auto;
-            margin: 0.5cm;
-            /* margin-top: 0.5cm; */
-
+        .card {
+            box-shadow: 0px 1px 15px 0px rgba(73, 72, 72, 0.3);
         }
     </style>
-@endpush
 @section('content')
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> --}}
@@ -26,16 +12,16 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <div class="card d-flex">
-                    <div class="row">
+                <div class="card d-flex ">
+                    <div class="row ">
                         <!-- Profile Image Column -->
                         <div class="col-7">
-                            <div class="banner float-start mr-4">
+                            <div class="banner float-start mr-4 p-1">
                                 <img width="100%" src="/Login_images/banner4.jpg" alt="not found">
                             </div>
                         </div>
                         <!-- Form Column -->
-                        <div class="col-5">
+                        <div class="col-5 ">
                             <div class="title  p-3" style="text-align: center;">
                                 <img width="40%" src="/Login_images/BookClub.jpg" class="img-fluid" alt=" not found">
                                 {{-- <h3 class="text" style="font-size: 2rem;">Login</h3> --}}
@@ -77,7 +63,7 @@
                                             <input id="password" type="password"
                                                 class="form-control @error('password') is-invalid @enderror {{ $errors->has('password') ? 'is-invalid' : '' }}"
                                                 name="password" required autocomplete="current-password">
-                                                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                             @enderror

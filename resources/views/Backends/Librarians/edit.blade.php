@@ -23,8 +23,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div class="card ">
-                    <div class="card-header"> Librarian Information</div>
+                <div class="card" >
+                    <div class="card-header text-white"style="background-color:  rgba(173, 72, 0, 1)"> Librarian Information</div>
 
                     <div class="card-body">
                         <form method="POST" class="row" action="{{ route('librarian.update', $librarian->LibrarianId) }}">
@@ -60,14 +60,16 @@
                                 <input type="text" name="Phone" id="Phone" class="form-control"
                                     value="{{ $librarian->Phone }}">
                             </div>
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input" value="1" name="IsHidden" id="customSwitch1"  {{ $librarian->IsHidden == 1 ? 'checked' : '' }}>
                                     <label class="custom-control-label" for="customSwitch1">Hidden</label>
                                     <input type="hidden" id="IsHidden" name="IsHidden" value="0">
                                 </div>
+                            </div> --}}
+                            <div class="form-group">
+                                <button type="submit" id="updateButton" class="btn btn-primary col-1 ml-2" >Update</button>
                             </div>
-                            <button type="submit" id="updateButton" class="btn btn-primary col-1 ml-2" >Update</button>
                         </form>
                     </div>
                 </div>
@@ -76,7 +78,7 @@
             </div>
         </div>
     </div>
-    <script>
+    {{-- <script>
         // Get the checkbox element
         var checkbox = document.getElementById('customSwitch1');
         // Get the hidden input element
@@ -91,5 +93,5 @@
                 hiddenInput.value = '0';
             }
         });
-    </script>
+    </script> --}}
 @endsection

@@ -44,28 +44,30 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="AuthorName">Author Name</label>
-                            <input type="text" name="AuthorName" id="AuthorName" class="form-control" required value="{{$catalogs->AuthorName}}">
+                            <input type="text" name="AuthorName" id="AuthorName" class="form-control"  value="{{$catalogs->AuthorName}}">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="Publisher">Publisher</label>
-                            <input type="text" name="Publisher" id="Publisher" class="form-control" required value="{{$catalogs->PubliSher}}">
+                            <input type="text" name="Publisher" id="Publisher" class="form-control"  value="{{$catalogs->PubliSher}}">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="PublishYear">Publish Year</label>
-                            <input type="number" name="PublishYear" id="PublishYear" class="form-control"  max="2030" step="1" value="{{$catalogs->PublishYear}}" required>
+                            <input type="number" name="PublishYear" id="PublishYear" class="form-control"  max="2030" step="1" value="{{$catalogs->PublishYear}}" >
                         </div>
                         <div class="form-group col-md-6">
                             <label for="PublisheDition">Published Edition</label>
-                            <input type="date" name="PublisheDition" id="PublisheDition" class="form-control" value="{{$catalogs->PublisheDition}}" required>
+                            <input type="date" name="PublisheDition" id="PublisheDition" class="form-control" value="{{$catalogs->PublisheDition}}" >
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input" value="1" name="IsHidden" id="customSwitch1"  {{ $catalogs->IsHidden == 1 ? 'checked' : '' }}>
                                 <label class="custom-control-label" for="customSwitch1">Hidden</label>
                                 <input type="hidden" id="IsHidden" name="IsHidden" value="0">
                             </div>
+                        </div> --}}
+                        <div class="form-group">
+                            <button type="submit" id="updateButton" class="btn btn-primary col-1 ml-2" >update</button>
                         </div>
-                        <button type="submit" id="updateButton" class="btn btn-primary col-1 ml-2" >update</button>
                     </form>
                 </div>
             </div>
@@ -85,7 +87,7 @@
         reader.readAsDataURL(event.target.files[0]);
     }
     </script>
-  <script>
+  {{-- <script>
     // Get the checkbox element
     var checkbox = document.getElementById('customSwitch1');
     // Get the hidden input element
@@ -100,5 +102,5 @@
             hiddenInput.value = '0';
         }
     });
-</script>
+</script> --}}
 @endsection

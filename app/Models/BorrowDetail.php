@@ -12,13 +12,18 @@ class BorrowDetail extends Model
     protected $table = 'borrowdetails';
     protected $guarded = [];
 
-    public function borrow(){
+    public function borrow()
+    {
 
-        return $this->belongsTo(Borrow::class,'BorrowId');
+        return $this->belongsTo(Borrow::class, 'BorrowId');
     }
-    public function book(){
+    public function book()
+    {
+        return $this->belongsTo(Book::class, 'BookId');
+    }
+    public function catalog()
+    {
 
-        return $this->belongsTo(Book::class,'BookId');
-
+        return $this->belongsTo(Catalog::class, 'CatalogId');
     }
 }

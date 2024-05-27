@@ -1,7 +1,4 @@
 @extends('Backends.master')
-@push('css')
-
-@endpush
 @section('content')
     <div class="row ">
         <div class="col-sm-6">
@@ -20,9 +17,9 @@
     </div><!-- /.row -->
     <!-- Small boxes (Stat box) -->
     <div class="row  justify-content-center">
-        <div class="col-lg-4 ">
+        <div class="col-lg-3 ">
             <!-- small box -->
-            <div class="small-box bg-white p-2">
+            <div class="small-box bg-white">
                 <div class="inner pl-4">
                     <h3>{{ $totalBorrows }}</h3>
                     <p>Total Borrows</p>
@@ -30,13 +27,15 @@
                 <div class="icon">
                     <i class="fa-solid fa-book-open-reader pt-1 mr-4"></i>
                 </div>
+                <a href="{{ route('borrow.index') }}" class="small-box-footer">More info <i
+                        class="fas fa-arrow-circle-right"></i></a>
 
             </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-4 ">
+        <div class="col-lg-3 ">
             <!-- small box -->
-            <div class="small-box bg-success p-2">
+            <div class="small-box bg-white">
                 <div class="inner pl-4">
                     <h3>{{ $totalReturns }}</h3>
 
@@ -45,20 +44,38 @@
                 <div class="icon">
                     <i class="fa-solid fa-right-left p-1 mr-4"></i>
                 </div>
+                <a href="{{ route('borrowdetail.index') }}" class="small-box-footer">More info <i
+                        class="fas fa-arrow-circle-right"></i></a>
+
             </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-4 ">
+        <div class="col-lg-3 ">
             <!-- small box -->
-            <div class="small-box bg-warning p-2">
+            <div class="small-box bg-white ">
                 <div class="inner pl-4">
                     <h3>{{ $totalBooks }}</h3>
-
                     <p>Total Books</p>
                 </div>
                 <div class="icon">
                     <i class="fa-solid fa-book p-1 mr-4"></i>
                 </div>
+                <a href="{{ route('book.index') }}" class="small-box-footer">More info <i
+                        class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 ">
+            <!-- small box -->
+            <div class="small-box bg-white ">
+                <div class="inner pl-4">
+                    <h3>{{ $totalCustomers }}</h3>
+                    <p>Total Books</p>
+                </div>
+                <div class="icon">
+                    <i class="fa-solid fa-book p-1 mr-4"></i>
+                </div>
+                <a href="{{ route('customer.index') }}" class="small-box-footer">More info <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- ./col -->
@@ -123,22 +140,24 @@
                 <div class="direct-chat-messages" style="height: 10cm;">
                     <div class="row mt-4">
                         @foreach ($books as $book)
+                            @php
+                                $borrowDetail = $book->borrowDetail; // Assuming the relationship is defined in the Book model
+                                $isReturned = $borrowDetail ? $borrowDetail->return : null;
+                            @endphp
+
                             <div class="col-sm-3 mb-2">
                                 <div class="position-relative">
-                                    <img src="
-                                    @if ($book->BookImage && file_exists(public_path('images/' . $book->BookImage))) {{ asset('images/' . $book->BookImage) }}
-                                    @else
-                                        {{ asset('uploads/image/noimage.png') }} @endif
-                                    "
+                                    <img src="{{ $book->BookImage && file_exists(public_path('images/' . $book->BookImage)) ? asset('images/' . $book->BookImage) : asset('uploads/image/noimage.png') }}"
                                         alt="Book Image" class="img-fluid">
                                     <div class="ribbon-wrapper ribbon-xl">
-                                        <div class="ribbon bg-secondary text-sm">
-                                            {{ $book->BookName }}
+                                        <div class="ribbon {{ $isReturned == 1 ? 'bg-primary' : 'bg-success' }} text-sm">
+                                            {{ $book->catalog->CatalogName}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
+
                     </div>
                 </div>
             </div>
@@ -147,9 +166,5 @@
         <!-- /.card -->
     </div>
     <!-- /.col -->
-
-
 @endsection
-@push('js')
 
-@endpush

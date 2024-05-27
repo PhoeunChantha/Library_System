@@ -29,7 +29,7 @@
                             @csrf
                             @method('PUT')
 
-                            <div class="form-group col-md-6">
+                            {{-- <div class="form-group col-md-6">
                                 <label for="BookName">Book Name</label>
                                 <input type="text" name="BookName" id="BookName"
                                     class="form-control @error('BookName') is-invalid @enderror"
@@ -39,7 +39,7 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
-                            </div>
+                            </div> --}}
 
                             <div class="form-group col-md-6">
                                 <label for="BookCode">Book Code</label>
@@ -111,17 +111,9 @@
                                         style="max-width: 100%; max-height: 100%; display: {{ $book->BookImage ? 'block' : 'none' }};">
                                 </div>
                             </div>
-
                             <div class="form-group">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" value="1" name="IsHidden"
-                                        id="customSwitch1" {{ old('IsHidden', $book->IsHidden) == 1 ? 'checked' : '' }}>
-                                    <label class="custom-control-label" for="customSwitch1">Hidden</label>
-                                    <input type="hidden" id="IsHidden" name="IsHidden" value="0">
-                                </div>
+                                <button type="submit" id="updateButton" class="btn btn-primary">Update</button>
                             </div>
-
-                            <button type="submit" id="updateButton" class="btn btn-primary col-1 ml-2">Update</button>
                         </form>
                     </div>
                 </div>

@@ -11,12 +11,19 @@ class Borrow extends Model
     protected $primaryKey = 'BorrowId';
     protected $guarded = [];
 
-    public function customer(){
+    public function customer()
+    {
 
-        return $this->belongsTo(Customer::class,'CustomerId');
+        return $this->belongsTo(Customer::class, 'CustomerId');
     }
-    public function librarian(){
+    public function librarian()
+    {
 
-        return $this->belongsTo(Librarian::class,'LibrarianId');
+        return $this->belongsTo(Librarian::class, 'LibrarianId');
+    }
+    public function book()
+    {
+
+        return $this->belongsTo(Book::class, 'BookId');
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id('BookId');
-            $table->string('BookName', 60);
+            // $table->string('BookName', 60);
             $table->string('BookCode', 60);
             $table->unsignedBigInteger('CatalogId');
             $table->foreign('CatalogId')->references('CatalogId')->on('catalogs')->onDelete('cascade');

@@ -96,6 +96,6 @@
         setInterval(updateDateTime, 1000);
         updateDateTime(); // initial call to display the time immediately
     </script> --}}
-</body>
 
+</body>
 </html>

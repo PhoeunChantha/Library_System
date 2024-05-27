@@ -1,24 +1,23 @@
 @extends('Backends.master')
 @section('content')
-<style>
-    a {
-        text-decoration: none;
-        color: gray;
-    }
-
-</style>
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h3>{{ __('Edit Borrow') }}</h3>
-            </div>
-            <div class="col-sm-6" style="text-align: right">
+    <style>
+        a {
+            text-decoration: none;
+            color: gray;
+        }
+    </style>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h3>{{ __('Edit Borrow') }}</h3>
+                </div>
+                <div class="col-sm-6" style="text-align: right">
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -85,54 +84,15 @@
                                 <label for="Emmo">Emmo:</label>
                                 <textarea id="Emmo" class="form-control" placeholder="Enter your note" name="Emmo">{{ $borrow->Emmo }}</textarea>
                             </div>
-                            {{-- <div class="form-check mt-2 ml-3">
-                                <input type="hidden" name="IsHidden" value="0">
-                                <input type="checkbox" name="IsHidden" id="IsHidden" class="form-check-input" value="1" value="1" {{ $borrow->IsHidden == 1 ? 'checked' : '' }}>
-                                <label class="form-check-label" for="isHidden">Hidden</label>
-                            </div> --}}
-
-                            <div class="form-group">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" value="1" name="IsHidden" id="customSwitch1"  {{ $borrow->IsHidden == 1 ? 'checked' : '' }}>
-                                    <label class="custom-control-label" for="customSwitch1">Hidden</label>
-                                    <input type="hidden" id="IsHidden" name="IsHidden" value="0">
-                                </div>
-                            </div>
-                            <button type="submit" id="updateButton" class="btn btn-primary mt-3 col-1 ml-3" >Update</button>
+                            <button type="submit" id="updateButton" class="btn btn-primary mt-3 col-1 ml-3">Update</button>
                         </form>
                     </div>
                 </div>
-                <a href="{{ route('borrow.index') }}" class="back"><i class="fa-solid fa-arrow-left mr-2"></i>back to
+                <a href="{{ route('borrow.index') }}" class="back"><i class="fa-solid fa-arrow-left mr-2"></i>back
+                    to
                     list</a>
             </div>
+
         </div>
     </div>
-    <script>
-        // Get the checkbox element
-        var checkbox = document.getElementById('customSwitch1');
-        // Get the hidden input element
-        var hiddenInput = document.getElementById('IsHidden');
-
-        // Add event listener to listen for changes in the checkbox
-        checkbox.addEventListener('change', function() {
-            // Toggle the values of the hidden input based on the checkbox state
-            if (this.checked) {
-                hiddenInput.value = '1';
-            } else {
-                hiddenInput.value = '0';
-            }
-        });
-    </script>
-    {{-- <script>
-        $(document).ready(function() {
-            // Initialize Bootstrap Switch
-            $('#my-checkbox').bootstrapSwitch();
-
-            // Update value of checkbox when color changes
-            $('#my-checkbox').on('switchChange.bootstrapSwitch', function(event, state) {
-                // Set the value of the checkbox based on the switch state
-                $(this).val(state ? 1 : 0);
-            });
-        });
-    </script> --}}
 @endsection

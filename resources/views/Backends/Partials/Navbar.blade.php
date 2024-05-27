@@ -1,3 +1,33 @@
+<style>
+    .dropdown-menu {
+        display: none;
+        transition: none;
+        /* Disable transitions */
+        animation: none;
+        /* Disable animations */
+
+    }
+    .user-menu:hover .dropdown-menu {
+        display: block;
+    }
+    .user-header{
+        border-radius: 20px !important;
+    }
+    .dropdown-menu{
+        border-radius: 20px !important;
+    }
+    .user-body{
+        border-radius: 20px !important;
+    }
+    .user-footer{
+        border-radius: 20px !important;
+    }
+    .user-footer button:hover{
+       font-size: 20px;
+       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+</style>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -31,10 +61,10 @@
           </form>
         </div>
       </li> --}}
-        <li class="nav-item dropdown user-menu">
+
+        <li class="nav-item dropdown user-menu" id="userDropdown">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                {{-- <img src="{{ asset('uploads/default-profile.png') }}" class="user-image img-circle elevation-2"
-            alt="User Image"> --}}
+                {{-- User Image --}}
                 @auth
                     @if (Auth::check())
                         @if (Auth::user()->profile)
@@ -46,29 +76,29 @@
                         @endif
                     @endif
                 @endauth
-                {{-- <span class="d-none d-md-inline">veha</span> --}}
+                {{-- User Name --}}
+                <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
-                <!-- User image -->
+            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;"
+                id="userDropdown">
+                <!-- User header -->
                 <li class="user-header bg-primary">
                     <img src="{{ asset('P_images/' . Auth::user()->profile) }}" class="img-circle elevation-2"
                         alt="User Image">
                     <p>
-                    <p>{{ Auth::user()->name }}</p>
-                    {{-- {{ Session::get('current_user')->name }} --}}
-                    <small>
-                        @php
-                            $user = Auth::user();
-                            $roleNames = !empty($user) ? $user->getRoleNames()->toArray() : [];
-                        @endphp
-                        @if (!empty($roleNames))
-                            {{ implode(', ', $roleNames) }}
-                        @else
-                            {{ __('No Roles') }}
-                        @endif
-                        since
-                        {{ Auth::user()->created_at->format('Y-m-d') }}
-                    </small>
+                        {{ Auth::user()->name }}
+                        <small>
+                            @php
+                                $user = Auth::user();
+                                $roleNames = !empty($user) ? $user->getRoleNames()->toArray() : [];
+                            @endphp
+                            @if (!empty($roleNames))
+                                {{ implode(', ', $roleNames) }}
+                            @else
+                                {{ __('No Roles') }}
+                            @endif
+                            since {{ Auth::user()->created_at->format('Y-m-d') }}
+                        </small>
                     </p>
                 </li>
                 <!-- Menu Body -->
@@ -88,15 +118,14 @@
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
-                    {{-- <a href="{{ route('admin.edit-profile',Session::get('current_user')->id) }}" class="btn btn-default btn-flat">Profile</a> --}}
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
                         <button type="submit" class="btn btn-default btn-flat float-right">Sign out</button>
                     </form>
                 </li>
-
             </ul>
         </li>
+
         <li class="nav-item mr-4">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>
