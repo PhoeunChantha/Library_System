@@ -51,7 +51,7 @@
                                 <label for="BookCode">Book Code</label>
                                 <input type="text" name="BookCode" id="BookCode"
                                     class="form-control @error('BookCode') is-invalid
-                                @enderror">{{ old('BookCode') }}
+                                @enderror" autocomplete="off">{{ old('BookCode') }}
                                 @error('BookCode')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -128,5 +128,21 @@
             };
             reader.readAsDataURL(file);
         }
+    </script>
+    <script>
+        document.getElementById('BookCode').addEventListener('input', function(event) {
+            const input = event.target;
+            const value = input.value;
+
+            // Ensure the input starts with 'cat'
+            if (!value.startsWith('BK')) {
+                input.value = 'BK' + value.replace(/^cat/, '');
+            }
+
+            // Ensure the fourth character is a number
+            if (value.length > 3 && !/\d/.test(value[3])) {
+                input.value = value.slice(0, 3) + value.slice(4);
+            }
+        });
     </script>
 @endsection

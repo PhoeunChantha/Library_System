@@ -107,11 +107,13 @@ Route::group(['middleware' => ['auth', 'isAdmin']], function () {
     Route::get('/borrow/index', [BorrowController::class, 'index'])->name('borrow.index');
     Route::get('/borrow/create', [BorrowController::class, 'create'])->name('borrow.create')->middleware('can:create borrow');
     Route::post('/borrow/index', [BorrowController::class, 'store'])->name('borrow.store');
-    Route::get('/borrow/edit/{id}', [BorrowController::class, 'edit'])->name('borrow.edit')->middleware('can:update borrow');
+    Route::get('/borrows/edit/{id}', [BorrowController::class, 'edit'])->name('borrow.edit')->middleware('can:update borrow');
     Route::put('/borrow/update/{id}', [BorrowController::class, 'update'])->name('borrow.update');
     Route::delete('/borrow/{id}', [BorrowController::class, 'destroy'])->name('borrow.destroy');
     Route::get('/borrow/show/{id}', [BorrowController::class, 'show'])->name('borrow.show')->middleware('can:view borrow');
     Route::put('borrow/update_IsHidden', [BorrowController::class, 'updateStatus'])->name('borrow.update_IsHidden');
+    //update borrow and borrowdetail
+    Route::put('/borrows/updateBoth/{id}', [BorrowController::class, 'updateBoth'])->name('borrow.updateBoth');
 
 
     //BorrowDetail

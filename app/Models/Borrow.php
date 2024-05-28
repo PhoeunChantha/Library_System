@@ -26,4 +26,8 @@ class Borrow extends Model
 
         return $this->belongsTo(Book::class, 'BookId');
     }
+    public function borrowDetails()
+    {
+        return $this->hasMany(BorrowDetail::class, 'BorrowId');
+    }
 }

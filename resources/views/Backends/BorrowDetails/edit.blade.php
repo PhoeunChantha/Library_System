@@ -95,7 +95,7 @@
             <div class="modal-body ">
                 <div class="container-fluid">
                     <div class="row">
-                        @foreach ($borrowdetails as $item)
+                        {{-- @foreach ($borrowdetails as $item) --}}
                             <form class="row" method="POST"
                                 action="{{ route('borrowdetail.update', $item->BorrowDetailId) }}">
                                 @csrf
@@ -149,7 +149,7 @@
 
                                 <button type="submit" class="btn btn-primary col-2 ml-2">Update</button>
                             </form>
-                        @endforeach
+                        {{-- @endforeach --}}
 
                     </div>
                 </div>

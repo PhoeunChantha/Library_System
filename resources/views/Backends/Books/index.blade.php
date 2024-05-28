@@ -40,8 +40,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>BookCode</th>
-                        <th>CatalogCode & Name</th>
+                        <th>Book Code</th>
+                        <th>Catalog Name</th>
                         <th>Image</th>
                         <th>Description</th>
                         <th>Staus</th>
@@ -68,9 +68,9 @@
                             <td>{{ $item->BookCode }}</td>
                             <td class="@if ($isBorrowed) disabled-row text-danger @endif">
                                 <span class="ml-2">
-                                    {{ $item->catalog->CatalogCode }}
-                                </span>||
-                                {{ $item->catalog->CatalogName }}
+                                    {{-- {{ $item->catalog->CatalogCode }} --}}
+                                    {{ $item->catalog->CatalogName }}
+                                </span>
                             </td>
                             <td>
                                 <img height="50" width="60"
@@ -180,7 +180,7 @@
         $(document).ready(function() {
             $("#bookTable").DataTable({
                 "responsive": true,
-                "lengthChange": false,
+                "lengthChange": true,
                 "autoWidth": false,
                 "paging": true,
                 "searching": true,

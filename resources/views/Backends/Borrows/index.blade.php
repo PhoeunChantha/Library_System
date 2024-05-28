@@ -19,7 +19,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <table id="borrowTable" class="table  table-hover">
+            <table id="borrowTable" class="table  table-hover text-nowrap table-responsive ">
                 @can('create borrow')
                     <a href="{{ route('borrow.create') }}" class="btn btn-info btn-sm mb-2"><i class="fa-solid fa-plus fa-xl"
                             style="color: #1567f4;"></i>Add</a>
@@ -38,48 +38,81 @@
                         <th>Deposit Amount</th>
                         <th>Due Date</th>
                         <th>Fine Amount</th>
+                        <th>Book Name</th>
+                        <th>Return</th>
+                        <th>Return Date</th>
                         <th>Emmo</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($borrows as $item)
-                        {{-- @if ($item->IsHidden == 0) --}}
-                        <tr class="borrowRow" @if ($item->IsHidden == 0) style="display:none;" @endif>
+
+                    {{-- @foreach ($borrows as $borrow)
+                        <tr class="borrowRow" @if ($borrow->IsHidden == 0) style="display:none;" @endif>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item->customer->CustomerName }}</td>
-                            <td>{{ $item->librarian->LibrarianName }}</td>
-                            <td>{{ $item->BorrowDate }}</td>
-                            <td>{{ $item->BorrowCode }}</td>
-                            <td><i class="fas fa-dollar-sign fa-sm mr-1" style="color: gray"></i>{{ $item->Depositamount }}
+                            <td>{{ $borrow->customer->CustomerName }}</td>
+                            <td>{{ $borrow->librarian->LibrarianName }}</td>
+                            <td>{{ $borrow->BorrowDate }}</td>
+                            <td>{{ $borrow->BorrowCode }}</td>
+                            <td>{{ $borrow->Duedate }}</td>
+                            <td><i class="fas fa-dollar-sign fa-sm mr-1"
+                                    style="color: gray"></i>{{ $borrow->Depositamount }}</td>
+                            <td><i class="fas fa-dollar-sign fa-sm mr-1" style="color: gray"></i>{{ $borrow->FineAmount }}
                             </td>
-                            <td>{{ $item->Duedate }}</td>
-                            <td><i class="fas fa-dollar-sign fa-sm mr-1" style="color: gray"></i>{{ $item->FineAmount }}
+                            <td>
+                                @foreach ($borrow->borrowDetails as $detail)
+                                    @php
+                                        $bookIds = json_decode($detail->book_ids, true);
+                                    @endphp
+
+                                    @foreach ($bookIds as $bookId)
+                                        @php
+                                            $book = \App\Models\Book::find($bookId);
+                                        @endphp
+
+                                        @if ($book)
+                                            <li>
+                                                {{ $book->BookCode }}
+                                                 {{ $book->catalog->CatalogName }}
+
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                @endforeach
                             </td>
-                            <td>{{ $item->Emmo }}</td>
+                            <td>
+                                @if ($borrow->borrowDetails->isNotEmpty() && $borrow->borrowDetails->first()->IsReturn == 1)
+                                    <span class="badge bg-success">Yes</span>
+                                @else
+                                    <span class="badge bg-danger">No</span>
+                                @endif
+                            </td>
+                            <td>{{ $borrow->borrowDetails->isNotEmpty() ? $borrow->borrowDetails->first()->ReturnDate : '' }}
+                            </td>
+                            <td>{{ $borrow->Emmo }}</td>
                             @can('hide data')
                                 <td>
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" class="custom-control-input switcher_input IsHidden"
-                                            id="IsHidden_{{ $item->BorrowId }}" data-id="{{ $item->BorrowId }}"
-                                            {{ $item->IsHidden == 1 ? 'checked' : '' }} name="IsHidden">
-                                        <label class="custom-control-label" for="IsHidden_{{ $item->BorrowId }}"></label>
+                                            id="IsHidden_{{ $borrow->BorrowId }}" data-id="{{ $borrow->BorrowId }}"
+                                            {{ $borrow->IsHidden == 1 ? 'checked' : '' }} name="IsHidden">
+                                        <label class="custom-control-label" for="IsHidden_{{ $borrow->BorrowId }}"></label>
                                     </div>
                                 </td>
                             @endcan
                             <td>
                                 @can('view borrow')
-                                    <a href="{{ route('borrow.show', $item->BorrowId) }}" class="btn btn-sm"
-                                        data-bs-toggle="modal" data-bs-target="#BorrowModal{{ $item->BorrowId}}"><i class="fa-solid fa-eye fa-xl"
-                                            style="color: #2363d1;"></i></a>
+                                    <a href="{{ route('borrow.show', $borrow->BorrowId) }}" class="btn btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#BorrowModal{{ $borrow->BorrowId }}"><i
+                                            class="fa-solid fa-eye fa-xl" style="color: #2363d1;"></i></a>
                                 @endcan
                                 @can('update borrow')
-                                    <a href="{{ route('borrow.edit', $item->BorrowId) }}" class="btn btn-sm"><i
+                                    <a href="{{ route('borrow.edit', $borrow->BorrowId) }}" class="btn btn-sm"><i
                                             class="fa-solid fa-pen-to-square fa-xl" style="color: #63E6BE;"></i></a>
                                 @endcan
                                 @can('delete borrow')
-                                    <form action="{{ route('borrow.destroy', $item->BorrowId) }}" method="POST"
+                                    <form action="{{ route('borrow.destroy', $borrow->BorrowId) }}" method="POST"
                                         class="d-inline">
                                         @csrf
                                         @method('DELETE')
@@ -90,15 +123,100 @@
                                 @endcan
                             </td>
                         </tr>
-                        {{-- @endif --}}
+                        @include('Backends.Borrows.show')
+                    @endforeach --}}
+                    @foreach ($borrows as $borrow)
+                        <tr class="borrowRow" @if ($borrow->IsHidden == 0) style="display:none;" @endif>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $borrow->customer->CustomerName }}</td>
+                            <td>{{ $borrow->librarian->LibrarianName }}</td>
+                            <td>{{ $borrow->BorrowDate }}</td>
+                            <td>{{ $borrow->BorrowCode }}</td>
+                            <td>{{ $borrow->Duedate }}</td>
+                            <td><i class="fas fa-dollar-sign fa-sm mr-1"
+                                    style="color: gray"></i>{{ $borrow->Depositamount }}</td>
+                            <td><i class="fas fa-dollar-sign fa-sm mr-1" style="color: gray"></i>{{ $borrow->FineAmount }}
+                            </td>
+                            <td>
+
+                                @foreach ($borrow->borrowDetails as $detail)
+                                    @php
+                                        $bookIds = json_decode($detail->book_ids, true);
+                                    @endphp
+
+                                    {{-- Check if $bookIds is not null and is an array --}}
+                                    @if (!is_null($bookIds) && is_array($bookIds))
+                                        @foreach ($bookIds as $bookId)
+                                            @php
+                                                // Find the book with the given ID
+                                                $book = \App\Models\Book::find($bookId);
+                                            @endphp
+
+                                            {{-- Check if $book is not null --}}
+                                            @if (!is_null($book))
+                                                <li>
+                                                    {{ $book->BookCode }}
+                                                    {{ $book->catalog->CatalogName }}
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                @endforeach
+
+                            </td>
+
+                            <td>
+                                @if ($borrow->borrowDetails && $borrow->borrowDetails->isNotEmpty() && $borrow->borrowDetails->first()->IsReturn == 1)
+                                    <span class="badge bg-success">Yes</span>
+                                @else
+                                    <span class="badge bg-danger">No</span>
+                                @endif
+                            </td>
+                            <td>{{ $borrow->borrowDetails && $borrow->borrowDetails->isNotEmpty() ? $borrow->borrowDetails->first()->ReturnDate : '' }}
+                            </td>
+                            <td>{{ $borrow->Emmo }}</td>
+                            @can('hide data')
+                                <td>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input switcher_input IsHidden"
+                                            id="IsHidden_{{ $borrow->BorrowId }}" data-id="{{ $borrow->BorrowId }}"
+                                            {{ $borrow->IsHidden == 1 ? 'checked' : '' }} name="IsHidden">
+                                        <label class="custom-control-label" for="IsHidden_{{ $borrow->BorrowId }}"></label>
+                                    </div>
+                                </td>
+                            @endcan
+                            <td>
+                                @can('view borrow')
+                                    <a href="{{ route('borrow.show', $borrow->BorrowId) }}" class="btn btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#BorrowModal{{ $borrow->BorrowId }}"><i
+                                            class="fa-solid fa-eye fa-xl" style="color: #2363d1;"></i></a>
+                                @endcan
+                                @can('update borrow')
+                                    <a href="{{ route('borrow.edit', $borrow->BorrowId) }}" class="btn btn-sm"><i
+                                            class="fa-solid fa-pen-to-square fa-xl" style="color: #63E6BE;"></i></a>
+                                @endcan
+                                @can('delete borrow')
+                                    <form action="{{ route('borrow.destroy', $borrow->BorrowId) }}" method="POST"
+                                        class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-delete">
+                                            <i class="fa-solid fa-trash fa-xl " style="color: red;"></i>
+                                        </button>
+                                    </form>
+                                @endcan
+                            </td>
+                        </tr>
                         @include('Backends.Borrows.show')
                     @endforeach
+
+
                 </tbody>
             </table>
         </div>
         <!-- /.card-body -->
     </div>
-    @include('Backends.BorrowDetails.index')
+    {{-- @include('Backends.BorrowDetails.index') --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
@@ -167,11 +285,11 @@
                 "paging": true,
                 "lengthChange": false,
                 "searching": true,
-                "ordering": false,
+                "ordering": true,
                 "info": true,
                 "autoWidth": false,
-                "responsive": true,
-                "dom": 'Bfrtip',
+                "responsive": false,
+                // "dom": 'Bfrtip',
             });
         });
     </script>

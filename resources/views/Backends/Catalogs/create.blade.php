@@ -31,7 +31,7 @@
                             @csrf
                             <div class="form-group col-md-6">
                                 <label for="CatalogCode">Catalog Code</label>
-                                <input type="text" name="CatalogCode" id="CatalogCode" class="form-control"
+                                <input type="text" name="CatalogCode" id="CatalogCode" autocomplete="off" class="form-control"
                                     value="{{ old('CatalogCode') }}">
                                 @error('CatalogCode')
                                     <span class="text-danger">{{ $message }}</span>
@@ -106,5 +106,29 @@
             }
             reader.readAsDataURL(event.target.files[0]);
         }
+    </script>
+    {{-- <script>
+        document.getElementById('CatalogCode').addEventListener('input', function(event) {
+            const input = event.target;
+            if (!input.value.startsWith('cat')) {
+                input.value = 'cat' + input.value.replace(/^cat/, '');
+            }
+        });
+    </script> --}}
+    <script>
+        document.getElementById('CatalogCode').addEventListener('input', function(event) {
+            const input = event.target;
+            const value = input.value;
+
+            // Ensure the input starts with 'cat'
+            if (!value.startsWith('cat')) {
+                input.value = 'cat' + value.replace(/^cat/, '');
+            }
+
+            // Ensure the fourth character is a number
+            if (value.length > 3 && !/\d/.test(value[3])) {
+                input.value = value.slice(0, 3) + value.slice(4);
+            }
+        });
     </script>
 @endsection

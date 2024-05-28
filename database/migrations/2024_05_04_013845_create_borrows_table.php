@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('LibrarianId');
             $table->foreign('LibrarianId')->references('LibrarianId')->on('librarians')->onDelete('cascade');
             $table->date('BorrowDate');
-            $table->string('BorrowCode', 60);
+            $table->string('BorrowCode', 60)->unique();
             $table->decimal('Depositamount',10, 2)->nullable();
             $table->date('Duedate');
             $table->decimal('FineAmount',10, 2)->nullable();

@@ -43,7 +43,7 @@
 
                             <div class="form-group col-md-6">
                                 <label for="BookCode">Book Code</label>
-                                <input type="text" name="BookCode" id="BookCode"
+                                <input type="text" name="BookCode" id="BookCode" autocomplete="off"
                                     class="form-control @error('BookCode') is-invalid @enderror"
                                     value="{{ old('BookCode', $book->BookCode) }}" required>
                                 @error('BookCode')
@@ -168,4 +168,20 @@
             reader.readAsDataURL(event.target.files[0]);
         }
     </script> --}}
+    <script>
+        document.getElementById('BookCode').addEventListener('input', function(event) {
+            const input = event.target;
+            const value = input.value;
+
+            // Ensure the input starts with 'cat'
+            if (!value.startsWith('BK')) {
+                input.value = 'BK' + value.replace(/^cat/, '');
+            }
+
+            // Ensure the fourth character is a number
+            if (value.length > 3 && !/\d/.test(value[3])) {
+                input.value = value.slice(0, 3) + value.slice(4);
+            }
+        });
+    </script>
 @endsection

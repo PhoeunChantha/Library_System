@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id('CustomerId');
-            $table->string('CustomerCode', 500);
+            $table->string('CustomerCode', 50)->unique();
             $table->unsignedBigInteger('CustomerTypeId'); // Use unsignedBigInteger for foreign keys
             $table->foreign('CustomerTypeId')->references('CustomerTypeId')->on('customertypes')->onDelete('cascade');
             $table->string('CustomerName', 50);

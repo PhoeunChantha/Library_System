@@ -32,31 +32,52 @@
                         @method('PUT')
                         <div class="form-group col-md-6">
                             <label for="CatalogCode">Catalog Code</label>
-                            <input type="text" name="CatalogCode" id="CatalogCode" class="form-control" required value="{{$catalogs->CatalogCode}}">
+                            <input type="text" name="CatalogCode" id="CatalogCode" autocomplete="off" class="form-control"  value="{{$catalogs->CatalogCode}}">
+                            @error('CatalogCode')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="CatalogName">Catalog Name</label>
-                            <input type="text" name="CatalogName" id="CatalogName" class="form-control" required value="{{$catalogs->CatalogName}}">
+                            <input type="text" name="CatalogName" id="CatalogName" class="form-control"  value="{{$catalogs->CatalogName}}">
+                            @error('CatalogName')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="Isbn">ISBN</label>
-                            <input type="text" name="Isbn" id="Isbn" class="form-control" required value="{{$catalogs->Isbn}}">
+                            <input type="text" name="Isbn" id="Isbn" class="form-control"  value="{{$catalogs->Isbn}}">
+                            @error('Isbn')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="AuthorName">Author Name</label>
                             <input type="text" name="AuthorName" id="AuthorName" class="form-control"  value="{{$catalogs->AuthorName}}">
+                            @error('AuthorName')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="Publisher">Publisher</label>
                             <input type="text" name="Publisher" id="Publisher" class="form-control"  value="{{$catalogs->PubliSher}}">
+                            @error('Publisher')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="PublishYear">Publish Year</label>
                             <input type="number" name="PublishYear" id="PublishYear" class="form-control"  max="2030" step="1" value="{{$catalogs->PublishYear}}" >
+                            @error('PublishYear')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         </div>
                         <div class="form-group col-md-6">
                             <label for="PublisheDition">Published Edition</label>
                             <input type="date" name="PublisheDition" id="PublisheDition" class="form-control" value="{{$catalogs->PublisheDition}}" >
+                            @error('PublisheDition')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                         </div>
                         {{-- <div class="form-group">
                             <div class="custom-control custom-switch">
@@ -103,4 +124,20 @@
         }
     });
 </script> --}}
+<script>
+    document.getElementById('CatalogCode').addEventListener('input', function(event) {
+        const input = event.target;
+        const value = input.value;
+
+        // Ensure the input starts with 'cat'
+        if (!value.startsWith('cat')) {
+            input.value = 'cat' + value.replace(/^cat/, '');
+        }
+
+        // Ensure the fourth character is a number
+        if (value.length > 3 && !/\d/.test(value[3])) {
+            input.value = value.slice(0, 3) + value.slice(4);
+        }
+    });
+</script>
 @endsection

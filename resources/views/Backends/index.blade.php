@@ -69,10 +69,10 @@
             <div class="small-box bg-white ">
                 <div class="inner pl-4">
                     <h3>{{ $totalCustomers }}</h3>
-                    <p>Total Books</p>
+                    <p>Total Customers</p>
                 </div>
                 <div class="icon">
-                    <i class="fa-solid fa-book p-1 mr-4"></i>
+                    <i class="fa-solid fa-address-book p-1 mr-4"></i>
                 </div>
                 <a href="{{ route('customer.index') }}" class="small-box-footer">More info <i
                         class="fas fa-arrow-circle-right"></i></a>

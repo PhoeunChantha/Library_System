@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('catalogs', function (Blueprint $table) {
             $table->id('CatalogId');
-            $table->string('CatalogCode', 60);
+            $table->string('CatalogCode', 60)->unique();
             $table->string('CatalogName', 500);
             $table->string('Isbn', 60);
             $table->string('AuthorName', 50);

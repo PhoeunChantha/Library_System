@@ -59,8 +59,6 @@
                             @endforeach
 
                         </td>
-
-
                         <td>{{ $item->Note }}</td>
                         <td>
                             @if ($item->IsReturn == 1)

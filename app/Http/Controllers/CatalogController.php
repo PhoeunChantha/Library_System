@@ -25,14 +25,22 @@ class CatalogController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'CatalogCode' => 'required|max:60',
+            'CatalogCode' => [
+                'required',
+                'unique:catalogs,CatalogCode',
+                'max:60',
+                function ($attribute, $value, $fail) {
+                    if (!str_starts_with($value, 'cat')) {
+                        $fail('The ' . $attribute . ' must start with "cat".');
+                    }
+                }
+            ],
             'CatalogName' => 'required|max:500',
             'Isbn' => 'nullable|max:60',
             'AuthorName' => 'required|max:50',
-            'Publisher' => 'required|max:50',
-            'PublishYear' => 'required|max:50',
-            'PublisheDition' => 'required|max:60',
-            //  'IsHidden' => 'nullable|boolean'
+            'Publisher' => 'nullable|max:50',
+            'PublishYear' => 'nullable|max:50',
+            'PublisheDition' => 'nullable|max:60',
         ]);
         if ($validator->fails()) {
             return redirect()->back()
@@ -74,7 +82,30 @@ class CatalogController extends Controller
     }
     public function update(Request $request, $id)
     {
-
+        $validator = Validator::make($request->all(), [
+            'CatalogCode' => [
+                'required',
+                'unique:catalogs,CatalogCode',
+                'max:60',
+                function ($attribute, $value, $fail) {
+                    if (!str_starts_with($value, 'cat')) {
+                        $fail('The ' . $attribute . ' must start with "cat".');
+                    }
+                }
+            ],
+            'CatalogName' => 'required|max:500',
+            'Isbn' => 'nullable|max:60',
+            'AuthorName' => 'required|max:50',
+            'Publisher' => 'nullable|max:50',
+            'PublishYear' => 'nullable|max:50',
+            'PublisheDition' => 'nullable|max:60',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with(['success' => 0, 'msg' => __('Invalid form input')]);
+        }
         try {
             DB::beginTransaction();
             $catalogs = Catalog::findOrFail($id);

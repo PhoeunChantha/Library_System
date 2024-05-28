@@ -377,4 +377,20 @@
             borrowIdInput.value = borrowCodeInput.value;
         });
     </script>
+    <script>
+        document.getElementById('BorrowCode').addEventListener('input', function(event) {
+            const input = event.target;
+            const value = input.value;
+
+            // Ensure the input starts with 'cat'
+            if (!value.startsWith('BR')) {
+                input.value = 'BR' + value.replace(/^cat/, '');
+            }
+
+            // Ensure the fourth character is a number
+            if (value.length > 3 && !/\d/.test(value[3])) {
+                input.value = value.slice(0, 3) + value.slice(4);
+            }
+        });
+    </script>
 @endsection

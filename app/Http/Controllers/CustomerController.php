@@ -26,7 +26,7 @@ class CustomerController extends Controller
     public function store(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'CustomerCode' => 'required|max:500',
+            'CustomerCode' => 'required|unique:customers,CustomerCode|max:60',
             'CustomerTypeId' => 'required|exists:customertypes,CustomerTypeId',
             'CustomerName' => 'required|max:50',
             'Sex' => 'nullable|max:50',
@@ -76,6 +76,21 @@ class CustomerController extends Controller
         return view('Backends.Customers.edit',$data);
     }
     public function update(Request $request,$id){
+
+        $validator = Validator::make($request->all(), [
+            'CustomerCode' => 'required|unique:customers,CustomerCode|max:60',
+            'CustomerTypeId' => 'required|exists:customertypes,CustomerTypeId',
+            'CustomerName' => 'required|max:50',
+            'Phone' => 'required|max:50',
+            'Address' => 'required|max:500',
+          //  'IsHidden' => 'boolean'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with(['success' => 0, 'msg' => __('Invalid form input')]);
+        }
         try{
             DB::beginTransaction();
             $customers = Customer::findOrFail($id);
