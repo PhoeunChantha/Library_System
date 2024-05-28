@@ -44,7 +44,7 @@ class LibrarianController extends Controller
             $librarians->Dob = $request->input('Dob');
             $librarians->Pob = $request->input('Pob');
             $librarians->Phone = $request->input('Phone');
-            //  $librarians->IsHidden = $request->input('IsHidden');
+              $librarians->IsHidden = '1';
             $librarians->save();
             DB::commit();
             $output = [

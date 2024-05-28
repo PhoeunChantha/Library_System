@@ -15,39 +15,7 @@ use Illuminate\Support\Facades\Validator;
 
 class BorrowController extends Controller
 {
-    // public function index()
-    // {
-    //     // Fetch all BorrowDetails
-    //     $borrowdetails = BorrowDetail::all();
 
-    //     // Initialize an array to store books
-    //     $books = collect();
-
-    //     // Iterate over each BorrowDetail to get book IDs and fetch corresponding books
-    //     foreach ($borrowdetails as $borrowdetail) {
-    //         // Decode book_ids
-    //         $bookIdsArray = json_decode($borrowdetail->book_ids, true);
-
-    //         // Fetch books for the current BorrowDetail and merge into the $books collection
-    //         $books = $books->merge(Book::whereIn('BookId', $bookIdsArray)->get());
-    //     }
-    //     // Fetch other necessary data
-
-    //     $borrows = Borrow::with(['customer', 'librarian', 'borrowDetails.book.catalog'])->get();
-    //     $customers = Customer::all();
-    //     $librarians = Librarian::all();
-    //     $totalBorrows = $borrows->count();
-
-    //     // Return view with compacted data
-    //     return view('Backends.Borrows.index', compact(
-    //         'borrows',
-    //         'customers',
-    //         'librarians',
-    //         'totalBorrows',
-    //         'borrowdetails',
-    //         'books'
-    //     ));
-    // }
     public function index()
     {
         // Fetch all BorrowDetails
@@ -84,9 +52,6 @@ class BorrowController extends Controller
             'books'
         ));
     }
-
-
-
 
     public function create()
     {
@@ -334,15 +299,15 @@ class BorrowController extends Controller
             ];
             return redirect()->route('borrow.index')->with($output);
         } catch (Exception $ex) {
-            dd($ex);
-            // DB::rollBack();
+
+            DB::rollBack();
             Log::error($ex->getMessage());
 
-            // $output = [
-            //     'success' => 0,
-            //     'msg' => __('Something went wrong')
-            // ];
-            // return redirect()->route('borrow.index')->with($output);
+            $output = [
+                'success' => 0,
+                'msg' => __('Something went wrong')
+            ];
+            return redirect()->route('borrow.index')->with($output);
         }
     }
 

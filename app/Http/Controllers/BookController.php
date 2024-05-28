@@ -15,100 +15,9 @@ use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
-    // public function index()
-    // {
-    //     $borrowDetails = BorrowDetail::all();
-    //     $items = Book::all();
-    //     $totalItems = $items->count();
-    //     $books = Book::with('catalog')->get();
-    //     $selectedBookCodes = BorrowDetail::pluck('book_ids');
-    //     return view('Backends.Books.index', compact('books', 'items', 'totalItems', 'selectedBookCodes', 'borrowDetails'));
-    // }
-    // public function index()
-    // {
-    //     $books = Book::with('catalog')->get();
-    //     // Fetch all borrow details
-    //     $borrowDetails = BorrowDetail::all();
-
-    //     // Fetch all books
-    //     $books = Book::all();
-    //     $totalItems = $books->count();
-
-    //     // Fetch book IDs that are currently borrowed (IsReturn = 0)
-    //     $borrowedBookIds = BorrowDetail::where('IsReturn', 0)
-    //         ->pluck('book_ids')
-    //         ->map(function ($bookIds) {
-    //             return json_decode($bookIds, true); // Decode JSON to array
-    //         })
-    //         ->flatten() // Flatten nested arrays
-    //         ->unique() // Ensure unique values
-    //         ->toArray(); // Convert to array
-    //     // Update the IsHidden status for books that are currently borrowed
-    //     Book::whereIn('BookId', $borrowedBookIds)->update(['IsHidden' => 0]);
-
-    //     // Fetch book IDs that have been returned (IsReturn = 1)
-    //     $returnedBookIds = BorrowDetail::where('IsReturn', 1)
-    //         ->pluck('book_ids')
-    //         ->map(function ($bookIds) {
-    //             return json_decode($bookIds, true); // Decode JSON to array
-    //         })
-    //         ->flatten() // Flatten nested arrays
-    //         ->unique() // Ensure unique values
-    //         ->toArray(); // Convert to array
-
-    //     // Update the IsHidden status for books that have been returned
-    //     Book::whereIn('BookId', $returnedBookIds)->update(['IsHidden' => 1]);
-
-    //     // Fetch the books with catalog relationships
-    //     $books = Book::with('catalog')->get();
-
-    //     // Fetch the selected book codes from BorrowDetail
-    //     $selectedBookCodes = BorrowDetail::pluck('book_ids');
-
-    //     return view('Backends.Books.index', compact('books', 'totalItems', 'selectedBookCodes', 'borrowDetails'));
-    // }
-    // public function index()
-    // {
-    //     // Fetch all borrow details
-    //     $borrowDetails = BorrowDetail::all();
-
-    //     // Fetch book IDs that are currently borrowed (IsReturn = 0)
-    //     $borrowedBookIds = BorrowDetail::where('IsReturn', 0)
-    //         ->pluck('book_ids')
-    //         ->map(function ($bookIds) {
-    //             return json_decode($bookIds, true); // Decode JSON to array
-    //         })
-    //         ->flatten() // Flatten nested arrays
-    //         ->unique() // Ensure unique values
-    //         ->toArray(); // Convert to array
-
-    //     // Update the IsHidden status for books that are currently borrowed
-    //     Book::whereIn('BookId', $borrowedBookIds)->update(['IsHidden' => 0]);
-
-    //     // Fetch book IDs that have been returned (IsReturn = 1)
-    //     $returnedBookIds = BorrowDetail::where('IsReturn', 1)
-    //         ->pluck('book_ids')
-    //         ->map(function ($bookIds) {
-    //             return json_decode($bookIds, true); // Decode JSON to array
-    //         })
-    //         ->flatten() // Flatten nested arrays
-    //         ->unique() // Ensure unique values
-    //         ->toArray(); // Convert to array
-
-    //     // Update the IsHidden status for books that have been returned
-    //     Book::whereIn('BookId', $returnedBookIds)->update(['IsHidden' => 1]);
-
-    //     // Fetch the books with catalog relationships
-    //     $books = Book::with('catalog')->get();
-    //     $totalItems = $books->count();
-
-    //     // Fetch the selected book codes from BorrowDetail
-    //     $selectedBookCodes = $borrowDetails->pluck('book_ids');
-
-    //     return view('Backends.Books.index', compact('books', 'totalItems', 'selectedBookCodes', 'borrowDetails'));
-    // }
     public function index()
     {
+
         // Fetch all books with their catalog relationships
         $books = Book::with('catalog')->get();
         $totalItems = $books->count();
@@ -121,8 +30,6 @@ class BookController extends Controller
 
         return view('Backends.Books.index', compact('books', 'totalItems', 'selectedBookCodes', 'borrowDetails'));
     }
-
-
 
     public function create()
     {
@@ -310,6 +217,7 @@ class BookController extends Controller
 
     public function show($id)
     {
+        // $book = Book::with('catalog')->findOrFail($id);
         $book = Book::findOrFail($id);
         $books = Book::with('catalog')->get();
         return view('Backends.Books.show', compact('book'));

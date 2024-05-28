@@ -38,9 +38,9 @@
     <!-- /.card-header -->
     <div class="card-body">
         <table id="roleTable" class="table  table-hover">
-            @can('create role')
+            {{-- @can('create role')
             <a href="{{url('roles/create')}}" class="btn btn-primary">Add role</a>
-            @endcan
+            @endcan --}}
             <thead>
                 <tr>
                     <th>Id</th>

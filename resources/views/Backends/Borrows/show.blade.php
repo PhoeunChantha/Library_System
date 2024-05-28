@@ -3,7 +3,6 @@
         text-decoration: none;
         color: gray;
     }
-
 </style>
 
 <!-- Modal -->
@@ -15,7 +14,7 @@
             ">
             <div class="modal-header d-flex" style="background-color:  rgba(173, 72, 0, 1)">
                 <h4 class="modal-title fs-5" id="exampleModalLabel">Borrow Details</h4>
-                <img  class="image mb-1" width="70px" src="/Login_images/Booklogo.png" alt="Not Found">
+                <img class="image mb-1" width="70px" src="/Login_images/Booklogo.png" alt="Not Found">
                 {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
             </div>
             <div class="modal-body ">
@@ -44,13 +43,41 @@
                             <p class="card-text">{{ $borrow->FineAmount ?? 'Null' }}</p>
                             <p class="card-text">{{ $borrow->Duedate ?? 'Null' }}</p>
                             <p class="card-text">
-                                @if ($books->isNotEmpty())
-                                @foreach ($books as $book)
-                                <li>{{ $book->catalog->CatalogName }}</li>
-                                    @endforeach
-                                @else
-                                    <span>Null</span>
-                                @endif
+
+                                {{-- @foreach ($borrow->borrowDetails as $borrowDetail)
+                                    @if ($books->isNotEmpty())
+                                        @foreach ($books as $book)
+                                            <li>{{ $book->catalog->CatalogName }}</li>
+                                        @endforeach
+                                    @else
+                                        <span>Null</span>
+                                    @endif
+                                @endforeach --}}
+
+                                @foreach ($borrow->borrowDetails as $detail)
+                                    @php
+                                        $bookIds = json_decode($detail->book_ids, true);
+                                    @endphp
+
+                                    {{-- Check if $bookIds is not null and is an array --}}
+                                    @if (!is_null($bookIds) && is_array($bookIds))
+                                        @foreach ($bookIds as $bookId)
+                                            @php
+                                                // Find the book with the given ID
+                                                $book = \App\Models\Book::find($bookId);
+                                            @endphp
+
+                                            {{-- Check if $book is not null --}}
+                                            @if (!is_null($book))
+                                                <li>
+                                                    {{ $book->BookCode }}
+                                                    {{ $book->catalog->CatalogName }}
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                @endforeach
+
                             </p>
                             <p class="card-text">
                                 @if ($borrow->IsReturn)

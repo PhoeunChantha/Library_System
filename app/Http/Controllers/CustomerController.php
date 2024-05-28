@@ -53,7 +53,7 @@ class CustomerController extends Controller
            $customers->Pob = $request->input('Pob');
            $customers->Phone = $request->input('Phone');
            $customers->Address = $request->input('Address');
-          // $customers->IsHidden = $request->input('IsHidden');
+           $customers->IsHidden = '1';
            $customers->save();
            DB::commit();
            $output = [
@@ -78,7 +78,7 @@ class CustomerController extends Controller
     public function update(Request $request,$id){
 
         $validator = Validator::make($request->all(), [
-            'CustomerCode' => 'required|unique:customers,CustomerCode|max:60',
+            'CustomerCode' => 'required|max:60',
             'CustomerTypeId' => 'required|exists:customertypes,CustomerTypeId',
             'CustomerName' => 'required|max:50',
             'Phone' => 'required|max:50',
@@ -102,7 +102,7 @@ class CustomerController extends Controller
             $customers->Pob = $request->input('Pob');
             $customers->Phone = $request->input('Phone');
             $customers->Address = $request->input('Address');
-          //  $customers->IsHidden = $request->has('IsHidden') ? $request->input('IsHidden') : 0;
+           //$customers->IsHidden = '1';
             $customers->save();
 
             DB::commit();
@@ -113,14 +113,15 @@ class CustomerController extends Controller
             ];
             return redirect()->route('customer.index')->with($output);
         } catch (Exception $ex) {
+            dd($ex);
             DB::rollBack();
             Log::error($ex->getMessage());
 
-            $output = [
-                'success' => 0,
-                'msg' => __('Something went wrong')
-            ];
-            return redirect()->route('customer.index')->with($output);
+            // $output = [
+            //     'success' => 0,
+            //     'msg' => __('Something went wrong')
+            // ];
+            // return redirect()->route('customer.index')->with($output);
         }
     }
     public function destroy($id){

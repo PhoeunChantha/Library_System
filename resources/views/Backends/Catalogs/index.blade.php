@@ -24,8 +24,11 @@
                     <a href="{{ route('catalog.create') }}" class="btn btn-info btn-sm mb-2"><i class="fa-solid fa-plus fa-xl"
                             style="color: #1567f4;"></i>Add</a>
                 @endcan
-                <button type="button" id="showAllBtn" class="btn btn-sm bg-gradient-success float-end">Show All</button>
 
+                @can('show hide')
+                    <button type="button" id="showAllBtn" class="btn btn-sm bg-gradient-success float-end">Show All
+                    </button>
+                @endcan
                 <thead>
                     <tr>
                         <th>#</th>
@@ -63,8 +66,8 @@
                             @endcan
                             <td>
                                 @can('view catalog')
-                                    <a href="{{ route('catalog.show', $item->CatalogId) }}" class="btn  btn-sm"  data-bs-toggle="modal"
-                                        data-bs-target="#CatalogModal{{$item->CatalogId}}"> <i
+                                    <a href="{{ route('catalog.show', $item->CatalogId) }}" class="btn  btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#CatalogModal{{ $item->CatalogId }}"> <i
                                             class="fa-solid fa-eye fa-xl" style="color: #2363d1;"></i></a>
                                 @endcan
                                 @can('update catalog')

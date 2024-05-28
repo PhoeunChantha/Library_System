@@ -36,7 +36,7 @@
                                 @if ($item->IsHidden == 0)
                                     <span class="badge bg-danger">Hidden</span>
                                 @else
-                                    <span class="badge bg-success">Shown</span>
+                                    <span class="badge bg-success">Show</span>
                                 @endif
                             </p>
                         </div>

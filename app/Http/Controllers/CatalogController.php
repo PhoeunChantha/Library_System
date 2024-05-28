@@ -83,16 +83,7 @@ class CatalogController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'CatalogCode' => [
-                'required',
-                'unique:catalogs,CatalogCode',
-                'max:60',
-                function ($attribute, $value, $fail) {
-                    if (!str_starts_with($value, 'cat')) {
-                        $fail('The ' . $attribute . ' must start with "cat".');
-                    }
-                }
-            ],
+            'CatalogCode' => 'required|max:50',
             'CatalogName' => 'required|max:500',
             'Isbn' => 'nullable|max:60',
             'AuthorName' => 'required|max:50',

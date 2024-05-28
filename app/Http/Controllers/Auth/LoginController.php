@@ -51,7 +51,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        if (!$user->hasRole(['super-admin', 'admin', 'staff'])) {
+        if (!$user->hasRole(['super-admin', 'admin', 'staff','user'])) {
             Auth::logout(); // Log out the user
             return redirect()->route('unauthorized'); // Redirect to unauthorized page
         }

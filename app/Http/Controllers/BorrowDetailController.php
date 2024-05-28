@@ -14,14 +14,7 @@ use Illuminate\Support\Facades\Validator;
 
 class BorrowDetailController extends Controller
 {
-    // public function index()
-    // {
-    //     $id = 1; // Set the ID of the BorrowDetail you want to fetch
-    //     $borrowdetail = BorrowDetail::findOrFail($id);
-    //     $books = Book::all();
-    //     $borrowdetails = BorrowDetail::with(['borrow', 'book', 'catalog'])->get();
-    //     return view('Backends.BorrowDetails.index', compact('id', 'borrowdetail', 'books', 'borrowdetails'));
-    // }
+
     public function index()
     {
         $books = Book::all();
@@ -48,11 +41,6 @@ class BorrowDetailController extends Controller
     {
         $borrows = Borrow::all();
         $books = Book::where('IsHidden', '!=', 0)->get();
-        // // Get IDs of books that are already borrowed
-        // $borrowedBookIds = BorrowDetail::pluck('book_id')->toArray();
-
-        // // Get all books except those that are already borrowed
-        // $books = Book::whereNotIn('id', $borrowedBookIds)->get();
         return view('Backends.BorrowDetails.create', compact('borrows', 'books'));
     }
 
