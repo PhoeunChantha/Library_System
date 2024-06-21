@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id('CustomerId');
             $table->string('CustomerCode', 50)->unique();
-            $table->unsignedBigInteger('CustomerTypeId'); // Use unsignedBigInteger for foreign keys
-            $table->foreign('CustomerTypeId')->references('CustomerTypeId')->on('customertypes')->onDelete('cascade');
+            $table->unsignedBigInteger('CustomerTypeId')->nullable(); // Use unsignedBigInteger for foreign keys
+            $table->foreign('CustomerTypeId')->references('CustomerTypeId')->on('customertypes');
             $table->string('CustomerName', 50);
             $table->string('Sex', 50)->nullable();
             $table->date('Dob')->nullable();

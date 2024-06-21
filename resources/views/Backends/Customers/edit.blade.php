@@ -19,28 +19,43 @@
             </div>
         </div>
     </section>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Customer Information</div>
+                    <div class="card-header"  style="background-color:  rgba(173, 72, 0, 1)">Customer Information</div>
 
                     <div class="card-body">
                         <form class="row" method="POST" action="{{ route('customer.update', $customers->CustomerId) }}">
                             @csrf
                             @method('put')
-                            <div class="form-group col-md-6 ">
+                            {{-- <div class="form-group col-md-6 ">
                                 <label for="customerCode">Customer Code</label>
                                 <input type="text" name="CustomerCode" id="customerCode" class="form-control"
                                     value="{{ $customers->CustomerCode }}">
                                 @error('CustomerCode')
                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                 @enderror
+                            </div> --}}
+                            <div class="form-group col-md-2">
+                                <label for="FirstCode">First Code</label>
+                                <input type="text" name="FirstCode" id="FirstCode" class="form-control"
+                                    oninput="updateCustomerCode()">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="NextCode">Next Code</label>
+                                <input type="number" name="NextCode" id="NextCode" class="form-control"
+                                    oninput="updateCustomerCode()">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="NextCode">Format Code</label>
+                                <input type="text" name="CustomerCode" id="customerCode" class="form-control"
+                                    value="{{ $customers->CustomerCode }}" readonly>
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-5">
                                 <label for="CustomerTypeId">Customer Type</label>
-                                <select name="CustomerTypeId" id="CustomerTypeId" class="form-control"
+                                <select name="CustomerTypeId" id="CustomerTypeId" class="form-control select2"
                                     value="{{ $customers->CustomerCode }}">
                                     @foreach ($customertypes as $customerType)
                                         <option value="{{ $customerType->CustomerTypeId }}">
@@ -60,7 +75,7 @@
 
                             <div class="form-group col-md-6">
                                 <label for="Sex">Sex</label>
-                                <select name="Sex" id="Sex" class="form-control" value="{{ $customers->Sex }}">
+                                <select name="Sex" id="Sex" class="form-control select2" value="{{ $customers->Sex }}">
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                     <option value="Other">Other</option>
@@ -128,4 +143,26 @@
         }
     });
 </script> --}}
+    <script>
+        function updateCustomerCode() {
+            // Get values from FirstCode and NextCode inputs
+            let firstCode = document.getElementById('FirstCode').value.trim();
+            let nextCode = document.getElementById('NextCode').value.trim();
+
+            // Validate input: Only allow letters in FirstCode
+            firstCode = firstCode.replace(/[^a-zA-Z]/g, '');
+
+            // Validate input: Only allow numbers in NextCode
+            nextCode = nextCode.replace(/\D/g, '');
+
+            // Generate sequential number
+            let sequentialNumber = (parseInt(nextCode) || 0) + 1;
+
+            // Generate CustomerCode
+            let customerCode = firstCode + nextCode + sequentialNumber.toString();
+
+            // Set the generated CustomerCode
+            document.getElementById('customerCode').value = customerCode;
+        }
+    </script>
 @endsection

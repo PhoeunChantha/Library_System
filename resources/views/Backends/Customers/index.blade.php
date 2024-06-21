@@ -13,20 +13,20 @@
         </div>
     </section>
     <div class="card ">
-        <div class="card-header">
+        <div class="card-header" style="background-color:  rgba(173, 72, 0, 1)">
             <h3 class="card-title">Customers </h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
             <table id="customerTable" class="table table-hover">
                 @can('create customer')
-                    <a href="{{ route('customer.create') }}" class="btn btn-info btn-sm mb-2"><i class="fa-solid fa-plus fa-xl"
-                            style="color: #1567f4;"></i>Add</a>
+                    <a href="{{ route('customer.create') }}" class="btn btn-info float-right"> <i class="fa fa-plus-circle"></i>
+                        New</a>
                 @endcan
-                @can('show hide')
+                {{-- @can('show hide')
                     <button type="button" id="showAllBtn" class="btn btn-sm bg-gradient-success float-end">Show All
                     </button>
-                @endcan
+                @endcan --}}
                 <thead>
                     <tr>
                         <th>#</th>
@@ -44,10 +44,17 @@
                 </thead>
                 <tbody>
                     @foreach ($customers as $item)
-                        <tr class="customerRow" @if ($item->IsHidden == 0) style="display:none;" @endif>
+                        <tr class="customerRow" @if ($item->IsHidden == 0)  @endif>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->CustomerCode }}</td>
-                            <td>{{ $item->customerType->CustomerTypeName }}</td>
+                            <td>
+                                @if ($item->customerType)
+                                    {{ $item->customerType->CustomerTypeName }}
+                                @else
+                                    Null
+                                @endif
+                            </td>
+
                             <td>{{ $item->CustomerName }}</td>
                             <td>{{ $item->Sex }}</td>
                             <td>{{ $item->Dob }}</td>
@@ -67,8 +74,8 @@
                             <td>
                                 @can('view customer')
                                     <a href="{{ route('customer.show', $item->CustomerId) }}" class="btn btn-sm"
-                                        data-bs-toggle="modal" data-bs-target="#CustomerModal{{$item->CustomerId}}"><i class="fa-solid fa-eye fa-xl"
-                                            style="color: #2363d1;"></i></a>
+                                        data-bs-toggle="modal" data-bs-target="#CustomerModal{{ $item->CustomerId }}"><i
+                                            class="fa-solid fa-eye fa-xl" style="color: #2363d1;"></i></a>
                                 @endcan
                                 @can('update customer')
                                     <a href="{{ route('customer.edit', $item->CustomerId) }}" class="btn  btn-sm"><i
@@ -98,33 +105,11 @@
     </div>
 
     <!-- /.card -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    {{-- <script>
-        $(document).ready(function() {
-            let showAll = false; // Flag to track the state of the button
-
-            $('#showAllBtn').click(function() {
-                showAll = !showAll; // Toggle the flag
-
-                if (showAll) {
-                    // Show all rows
-                    $('.customerRow').show();
-                } else {
-                    // Hide rows where IsHidden is 1
-                    $('.customerRow').each(function() {
-                        if ($(this).find('input.IsHidden').is('0')) {
-                            $(this).hide();
-                        }
-                    });
-                }
-            });
-        });
     </script> --}}
-    <script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {{-- <script>
         $(document).ready(function() {
             let showAll = false; // Flag to track the state of the button
 
@@ -151,8 +136,8 @@
                 }
             });
         });
-    </script>
-    <script>
+    </script> --}}
+    {{-- <script>
         $(document).ready(function() {
             $('#customerTable').DataTable({
                 "paging": true,
@@ -162,6 +147,35 @@
                 "info": true,
                 "autoWidth": false,
                 "responsive": true
+            });
+        });
+    </script> --}}
+    <script>
+        $(document).ready(function() {
+            $('#customerTable').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "language": {
+                    "search": "",
+                    "searchPlaceholder": "    Search for something...",
+                },
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true
+            });
+
+            // Center the search input
+            var searchInput = $('div.dataTables_filter input');
+            var searchInputParent = searchInput.parent();
+            searchInputParent.css({
+                'width': '100%',
+                'text-align': 'left'
+            });
+            searchInput.css({
+                'display': 'inline-block',
+                'width': '10cm',
+                'height': '1cm'
             });
         });
     </script>

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Borrow extends Model
 {
     use HasFactory;
+  
     protected $primaryKey = 'BorrowId';
     protected $guarded = [];
 
@@ -18,8 +19,11 @@ class Borrow extends Model
     }
     public function librarian()
     {
-
         return $this->belongsTo(Librarian::class, 'LibrarianId');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'UserId');
     }
     public function book()
     {

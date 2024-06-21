@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\User;
-use App\Exports\UsersExport;
 use App\Models\Librarian;
+use App\Exports\UsersExport;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Validator;
 
 
 class UserController extends Controller
@@ -29,6 +31,7 @@ class UserController extends Controller
     }
     public function create()
     {
+
         $roles = Role::pluck('name', 'name')->all();
         return view('Backends.role-permission.user.create', [
             'roles' => $roles
@@ -37,14 +40,21 @@ class UserController extends Controller
     }
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255|unique:users,name',
+            'email' => 'required|email|max:255|unique:users,email',
+            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'password' => 'required|string|min:8|max:20|unique:users,password',
+            'roles' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with(['success' => 0, 'msg' => __('Invalid form input')]);
+        }
         try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|max:255|unique:users,email',
-                'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'password' => 'required|string|min:8|max:20',
-                'roles' => 'required'
-            ]);
+            DB::beginTransaction();
 
             $user = new User();
             $user->name = $request->input('name');
@@ -62,11 +72,20 @@ class UserController extends Controller
             $user->save();
 
             $user->syncRoles($request->roles);
+            DB::commit();
+
+            $output = [
+                'success' => 1,
+                'msg' => __('User created successfully')
+            ];
         } catch (Exception $ex) {
-            Log::error($ex->getMessage());
-            return response()->json(['message' => $ex->getMessage()], 500);
+            DB::rollBack();
+            $output = [
+                'success' => 0,
+                'msg' => __('Something went wrong')
+            ];
         }
-        return redirect('/users')->with('status', 'User created sucessfully with roles');
+        return redirect('/users')->with($output);
     }
     public function edit(User $user)
     {
@@ -83,14 +102,30 @@ class UserController extends Controller
     }
     public function update(Request $request, User $user)
     {
-        try {
-            $request->validate([
+        if ($user->hasRole('super-admin')) {
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|max:255|unique:users,email,' . $user->id,
                 'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'password' => 'nullable|string|min:8|max:20',
                 'roles' => 'required|array', // Make sure roles is an array
             ]);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+                'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+        }
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with(['success' => 0, 'msg' => __('Invalid form input')]);
+        }
+        try {
+            DB::beginTransaction();
+
             $user->name = $request->input('name');
             $user->email = $request->input('email');
             // Check if a new image is uploaded
@@ -127,16 +162,68 @@ class UserController extends Controller
             if ($request->has('roles')) {
                 $user->syncRoles($request->roles);
             }
+            DB::commit();
+
+            $output = [
+                'success' => 1,
+                'msg' => __('User updated successfully')
+            ];
+            return redirect()->route('/users')->with($output);
         } catch (Exception $ex) {
+            DB::rollBack();
             Log::error($ex->getMessage());
-            return response()->json(['message' => 'Error updating user'], 500);
+
+            $output = [
+                'success' => 0,
+                'msg' => __('Something went wrong')
+            ];
+            return redirect()->route('/users')->with($output);
         }
-        return redirect('/users')->with('status', 'User updated successfully with roles');
     }
     public function destroy($userId)
     {
-        $user = User::findOrFail($userId);
-        $user->delete();
-        return redirect('/users')->with('status', 'User Deleted sucessfully with roles');
+        try {
+            DB::beginTransaction();
+
+            $user = User::findOrFail($userId);
+             $user->delete();
+
+            DB::commit();
+
+            // Redirect back to the book index page with a success message
+            $output = [
+                'success' => 1,
+                'msg' => __('User deleted successfully.')
+            ];
+            return redirect()->route('/users')->with($output);
+        } catch (Exception $ex) {
+            DB::rollBack();
+            Log::error($ex->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __('Something went wrong')
+            ];
+            return redirect()->route('/users')->with($output);
+        }
+    }
+    public function updateStatus(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = User::findOrFail($request->id);
+            $user->Status = $request->Status;
+            $user->save();
+
+            $output = ['Status' => 1, 'msg' => __(' Update successfully')];
+
+            DB::commit();
+        } catch (Exception $e) {
+            $output = ['Status' => 0, 'msg' => __('Something went wrong')];
+            DB::rollBack();
+        }
+
+        return response()->json($output);
     }
 }

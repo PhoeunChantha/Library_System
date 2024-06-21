@@ -18,11 +18,11 @@
             </div>
         </div>
     </section>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Book Information</div>
+                    <div class="card-header"  style="background-color:  rgba(173, 72, 0, 1)">Book Information</div>
                     <div class="card-body">
                         <form method="POST" class="row" action="{{ route('book.update', $book->BookId) }}"
                             enctype="multipart/form-data">

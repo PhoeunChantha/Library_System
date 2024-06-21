@@ -20,11 +20,11 @@
         </div>
     </div>
 </section>
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Catalogs Information</div>
+                <div class="card-header"  style="background-color:  rgba(173, 72, 0, 1)">Catalogs Information</div>
 
                 <div class="card-body">
                     <form class="row" method="POST" action="{{ route('catalog.update',$catalogs->CatalogId) }}" enctype="multipart/form-data">
@@ -79,15 +79,11 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                         </div>
-                        {{-- <div class="form-group">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" value="1" name="IsHidden" id="customSwitch1"  {{ $catalogs->IsHidden == 1 ? 'checked' : '' }}>
-                                <label class="custom-control-label" for="customSwitch1">Hidden</label>
-                                <input type="hidden" id="IsHidden" name="IsHidden" value="0">
-                            </div>
-                        </div> --}}
+                        <div class="form-group col-md-6">
+
+                        </div>
                         <div class="form-group">
-                            <button type="submit" id="updateButton" class="btn btn-primary col-1 ml-2" >update</button>
+                            <button type="submit" id="updateButton" class="btn btn-primary ml-2" >update</button>
                         </div>
                     </form>
                 </div>

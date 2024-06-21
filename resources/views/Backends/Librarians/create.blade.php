@@ -6,6 +6,8 @@
             text-decoration: none;
             color: gray;
         }
+
+       
     </style>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -23,15 +25,17 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header text-white" style="background-color:  rgba(173, 72, 0, 1)">Librarian Information</div>
+                    <div class="card-header text-white" style="background-color:  rgba(173, 72, 0, 1)">Librarian Information
+                    </div>
 
                     <div class="card-body">
-                        <form class="row"  method="POST" action="{{ route('librarian.store') }}">
+                        <form class="row" method="POST" action="{{ route('librarian.store') }}">
                             @csrf
 
                             <div class="form-group col-md-6">
-                                <label for="librarianName">Librarian Name</label>
-                                <input type="text" name="LibrarianName" id="librarianName" class="form-control  @error('LibrarianName') is-invalid @enderror">
+                                <label for="librarianName" class="form-label text-muted required">Librarian Name</label>
+                                <input type="text" name="LibrarianName" id="librarianName"
+                                    class="form-control  @error('LibrarianName') is-invalid @enderror">
                                 @error('LibrarianName')
                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                 @enderror
@@ -57,8 +61,9 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="Phone">Phone</label>
-                                <input type="text" name="Phone" id="Phone" class="form-control @error('Phone') is-invalid @enderror" maxlength="60">
+                                <label for="Phone" class="form-label text-muted required">Phone</label>
+                                <input type="text" name="Phone" id="Phone"
+                                    class="form-control @error('Phone') is-invalid @enderror" maxlength="60">
                                 @error('Phone')
                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                 @enderror

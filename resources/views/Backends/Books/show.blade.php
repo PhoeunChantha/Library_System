@@ -3,45 +3,43 @@
         text-decoration: none;
         color: gray;
     }
-</style>
 
-<!-- Modal -->
-<div class="modal fade" id="BookModal{{ $item->BookId }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
+    img {
+        border-radius: 10px;
+    }
+</style>
+<div class="modal fade scrollable" id="BookModal{{ $item->BookId }}" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color:  rgba(173, 72, 0, 1)">
                 <h4 class="modal-title fs-5" id="exampleModalLabel">Book Details</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body">
-                <div class="row justify-content-center">
-                    <div class="col-lg-12 d-flex justify-content-center align-items-center ml-5">
-                        <div class="col-lg-6 ml-2">
-                            <p class="card-text">Book Code:</p>
-                            <p class="card-text">Catalog Name: </p>
-                            <p class="card-text">BookImage:</p>
-                            <p class="card-text">Description: </p>
-                            <p class="card-text">Status</p>
-                            </p>
+                <div class="card card-primary">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <img src="{{ asset('images/' . $item->BookImage) }}" alt="No Image"
+                                class="rounded shadow-lg" width="250">
                         </div>
-                        <div class="col-lg-6 ml-2">
-                            <p class="card-text">{{ $item->BookCode ?? 'Null' }}</p>
-                            <p class="card-text">{{ $item->catalog->CatalogName ?? 'Null' }}</p>
-                            <p class="card-text"><img  src="{{ asset('images/' . $item->BookImage) }}"
-                                    alt="No Image" width="70"></p>
-                            <p class="card-text">{{ $item->BookDescription ?? 'Null' }}</p>
-                            <p class="card-text"> @if ($item->IsHidden == 1)
-                                {{-- <i class="fas fa-check ml-2" style="color: green;"></i> --}}
-                                <span class="badge bg-success">showed</span>
-                                <!-- Green color for checked state -->
-                            @else
-                                {{-- <i class="fas fa-times ml-2" style="color: red;"></i>  --}}
-                                <span class="badge bg-danger">Hided</span>
-                            @endif</p>
-                        </div>
+                        <h3 class="profile-username text-center mt-2 mb-2">
+                            {{ $item->catalog->CatalogName ?? 'Null' }}
+                        </h3>
+                        <ul class="list-group list-group-unbordered mb-3">
+                            <li class="list-group-item">
+                                <b class="ml-5">Book Code:</b> <p class="float-right mr-3">{{ $item->BookCode ?? 'Null' }}</p>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Catalog Name: </b> <b
+                                    class="float-right mr-4">{{ $item->catalog->CatalogName ?? 'Null' }}</b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Description: </b> <b class="float-right mr-5">{{ $item->BookDescription ?? 'Null' }}</b>
+                            </li>
+                        </ul>
                     </div>
+                    <!-- /.card-body -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -50,3 +48,4 @@
         </div>
     </div>
 </div>
+

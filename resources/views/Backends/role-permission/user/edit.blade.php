@@ -4,14 +4,14 @@
     <style>
         /* Style for the circular profile picture */
         #preview {
-                    display: block;
-                    width: 120px;
-                    height: 120px;
-                    margin-top: 10px;
-                    border-radius: 50%;
-                    object-fit: cover;
+            display: block;
+            width: 120px;
+            height: 120px;
+            margin-top: 10px;
+            border-radius: 50%;
+            object-fit: cover;
 
-                }
+        }
 
         a {
             text-decoration: none;
@@ -31,34 +31,61 @@
             </div>
         </div>
     </section>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        User Information
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header" style="background-color:  rgba(173, 72, 0, 1)">
+                User Information
+            </div>
+            <div class="card-body">
+                <form class="row" action="{{ url('users/' . $user->id) }}" method="POST"
+                    onsubmit="return validatePassword()" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group col-md-6">
+                        <label for="name">User Name</label>
+                        <input type="text" name="name" value="{{ $user->name }}" class="form-control" required />
                     </div>
-                    <div class="card-body">
-                        <form class="row" action="{{ url('users/' . $user->id) }}" method="POST"
-                            onsubmit="return validatePassword()" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-                            <div class="form-group col-md-6">
-                                <label for="name">User Name</label>
-                                <input type="text" name="name" value="{{ $user->name }}" class="form-control"
-                                    required />
+                    <div class="form-group col-md-6">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" value="{{ $user->email }}" class="form-control" required />
+                    </div>
+                    @if ($user->hasRole('super-admin'))
+                       
+                        {{-- <div class="form-group col-md-6">
+                            <input type="checkbox" id="agree-checkbox" onchange="togglePasswordField()">
+                            <label for="agree-checkbox">I agree to update my password</label>
+                            <label for="password">Password</label>
+                            <div class="input-group">
+                                <input type="password" name="password" class="form-control" id="password" minlength="8"
+                                    maxlength="20" pattern=".{8,20}" title="Password must be between 8 and 20 characters"
+                                    disabled />
+                                <button type="button" class="btn btn-outline-secondary toggle-password"
+                                    onclick="togglePasswordVisibility()">
+                                    <i class="fas fa-eye-slash"></i>
+                                </button>
                             </div>
+                            <small id="password-error" class="text-danger mt-2" style="display: none;">Password must be
+                                between 8 and 20 characters</small>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input type="password" name="confirm_password" class="form-control" id="confirm_password" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="roles">Role</label>
+                            <select class="form-control select2" name="roles[]" id="roles" multiple required>
+                                <option value="">Select Role</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role }}" {{ $user->hasRole($role) ? 'selected' : '' }}>
+                                        {{ $role }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+                        <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="email">Email</label>
-                                <input type="email" name="email" value="{{ $user->email }}" class="form-control"
-                                    required />
-                            </div>
-
-                            <div class="mb-1">
                                 <input type="checkbox" id="agree-checkbox" onchange="togglePasswordField()">
                                 <label for="agree-checkbox">I agree to update my password</label>
-                            </div>
-                            <div class="form-group col-md-6">
                                 <label for="password">Password</label>
                                 <div class="input-group">
                                     <input type="password" name="password" class="form-control" id="password"
@@ -69,14 +96,14 @@
                                         <i class="fas fa-eye-slash"></i>
                                     </button>
                                 </div>
-                                <small id="password-error" class="text-danger mt-2" style="display: none;">Password must be
-                                    between 8 and 20 characters</small>
+                                <small id="password-error" class="text-danger mt-2" style="display: none;">
+                                    Password must be between 8 and 20 characters
+                                </small>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="confirm_password">Confirm Password</label>
                                 <input type="password" name="confirm_password" class="form-control" id="confirm_password" />
                             </div>
-
                             <div class="form-group col-md-6">
                                 <label for="roles">Role</label>
                                 <select class="form-control select2" name="roles[]" id="roles" multiple required>
@@ -88,37 +115,42 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="BookImage">New Profile</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input user-file-input" name="profile"
-                                            id="exampleInputFile" accept="image/*" onchange="previewImage(event)">
-                                        <label class="custom-file-label" id="fileLabel" for="exampleInputFile">Choose
-                                            Profile</label>
-                                    </div>
-                                </div>
-                                <div class="preview text-center border rounded mt-2" style="height: 150px; display: flex; justify-content: center; align-items: center;">
-                                    <img id="preview" src="
-                                        @if ($user->profile && file_exists(public_path('P_images/' . $user->profile)))
-                                            {{ asset('P_images/' . $user->profile) }}
+                        </div>
+                    @endif
+
+                    <div class="form-group col-md-6">
+                        <label for="BookImage">New Profile</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input user-file-input" name="profile"
+                                    id="exampleInputFile" accept="image/*" onchange="previewImage(event)">
+                                <label class="custom-file-label" id="fileLabel" for="exampleInputFile">Choose
+                                    Profile</label>
+                            </div>
+                        </div>
+                        <div class="preview text-center border rounded mt-2"
+                            style="height: 150px; display: flex; justify-content: center; align-items: center;">
+                            <img id="preview"
+                                src="
+                                        @if ($user->profile && file_exists(public_path('P_images/' . $user->profile))) {{ asset('P_images/' . $user->profile) }}
                                         @else
-                                            {{ asset('P_images/default.png') }}
-                                        @endif
-                                    " alt="Preview" style="max-width: 100%; max-height: 100%; display: {{ $user->profile ? 'block' : 'none' }};">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <button type="submit" onclick="validatePasswordUpdate()"
-                                    class="btn btn-primary">Save</button>
-                            </div>
-                        </form>
+                                            {{ asset('P_images/default.png') }} @endif
+                                    "
+                                alt="Preview"
+                                style="max-width: 100%; max-height: 100%; display: {{ $user->profile ? 'block' : 'none' }};">
+                        </div>
                     </div>
-                </div>
-                <a href="{{ url('users') }}" class="back"><i class="fa-solid fa-arrow-left mr-2"></i>back to
-                    list</a>
+                    <div class="form-group col-md-6"></div>
+                    <div class="form-group">
+                        <button type="submit" onclick="validatePasswordUpdate()" class="btn btn-primary float-right"> <i
+                                class="fa fa-save"></i> {{ __('Save') }}</button>
+                    </div>
+                </form>
             </div>
         </div>
+        <a href="{{ url('users') }}" class="back"><i class="fa-solid fa-arrow-left mr-2"></i>back to
+            list</a>
+
     </div>
     {{-- //show and hide pass --}}
     <script>

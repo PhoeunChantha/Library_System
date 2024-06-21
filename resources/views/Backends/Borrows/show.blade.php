@@ -18,86 +18,85 @@
                 {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
             </div>
             <div class="modal-body ">
-                <div class="row justify-content-center">
-                    <div class="col-lg-12 d-flex justify-content-center align-items-center ml-5">
-                        <div class="col-lg-6 ml-5">
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Customer Name:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Librarian Name:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Borrow Date: </p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Borrow Code:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Depositamount:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">FineAmount:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Duedate:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Book Name:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Return:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Return Date:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Emmo:</p>
-                            <p style="color: rgba(173, 72, 0, 1)" class="card-text">Hidden:</p>
-                        </div>
-                        <div class="col-lg-6 pl-5">
-                            <p class="card-text">{{ $borrow->customer->CustomerName ?? 'Null' }}</p>
-                            <p class="card-text">{{ $borrow->librarian->LibrarianName ?? 'Null' }}</p>
-                            <p class="card-text">{{ $borrow->BorrowDate ?? 'Null' }}</p>
-                            <p class="card-text">{{ $borrow->BorrowCode ?? 'Null' }}</p>
-                            <p class="card-text">{{ $borrow->Depositamount ?? 'Null' }}</p>
-                            <p class="card-text">{{ $borrow->FineAmount ?? 'Null' }}</p>
-                            <p class="card-text">{{ $borrow->Duedate ?? 'Null' }}</p>
-                            <p class="card-text">
-
-                                {{-- @foreach ($borrow->borrowDetails as $borrowDetail)
-                                    @if ($books->isNotEmpty())
-                                        @foreach ($books as $book)
-                                            <li>{{ $book->catalog->CatalogName }}</li>
-                                        @endforeach
-                                    @else
-                                        <span>Null</span>
-                                    @endif
-                                @endforeach --}}
-
-                                @foreach ($borrow->borrowDetails as $detail)
-                                    @php
-                                        $bookIds = json_decode($detail->book_ids, true);
-                                    @endphp
-
-                                    {{-- Check if $bookIds is not null and is an array --}}
-                                    @if (!is_null($bookIds) && is_array($bookIds))
-                                        @foreach ($bookIds as $bookId)
+                <div class="card card-primary">
+                    <div class="card-body">
+                        <ul class="list-group list-group-unbordered mb-3">
+                            <li class="list-group-item">
+                                <b class="ml-5">Customer Name:</b> <b
+                                    class="float-right mr-5">{{ $borrow->customer->CustomerName ?? 'Null' }}</b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Librarian Name:</b> <b
+                                    class="float-right mr-5 ">{{ $borrow->user->name ?? 'Null' }}</b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Borrow Date: </b> <b
+                                    class="float-right mr-5">{{ $borrow->BorrowDate ?? 'Null' }}</b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Borrow Code: </b> <b
+                                    class="float-right mr-5">{{ $borrow->BorrowCode ?? 'Null' }}</b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Depositamount:</b> <b
+                                    class="float-right mr-5">{{ $borrow->Depositamount ?? 'Null' }}</b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">FineAmount:</b> <b
+                                    class="float-right mr-5">{{ $borrow->FineAmount ?? 'Null' }}</b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Duedate:</b> <b
+                                    class="float-right mr-5">{{ $borrow->Duedate ?? 'Null' }}</b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Book Name:</b> <b class="float-right mr-5">
+                                    <ul class="list-unstyled ml-3">
+                                        @foreach ($borrow->borrowDetails as $detail)
                                             @php
-                                                // Find the book with the given ID
-                                                $book = \App\Models\Book::find($bookId);
+                                                $bookIds = json_decode($detail->book_ids, true);
                                             @endphp
 
-                                            {{-- Check if $book is not null --}}
-                                            @if (!is_null($book))
-                                                <li>
-                                                    {{ $book->BookCode }}
-                                                    {{ $book->catalog->CatalogName }}
-                                                </li>
+                                            {{-- Check if $bookIds is not null and is an array --}}
+                                            @if (!is_null($bookIds) && is_array($bookIds))
+                                                @foreach ($bookIds as $bookId)
+                                                    @php
+                                                        // Find the book with the given ID
+                                                        $book = \App\Models\Book::find($bookId);
+                                                    @endphp
+
+                                                    {{-- Check if $book is not null --}}
+                                                    @if (!is_null($book))
+                                                        <li>
+                                                            {{ $book->BookCode }} - {{ $book->catalog->CatalogName }}
+                                                        </li>
+                                                    @endif
+                                                @endforeach
                                             @endif
                                         @endforeach
+                                    </ul>
+                                </b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Return:</b> <b class="float-right mr-5">
+                                    @if ($borrow->IsReturn)
+                                        <span class="badge bg-success">Yes</span>
+                                    @else
+                                        <span class="badge bg-danger">No</span>
                                     @endif
-                                @endforeach
-
-                            </p>
-                            <p class="card-text">
-                                @if ($borrow->IsReturn)
-                                    <span class="badge bg-success">Yes</span>
-                                @else
-                                    <span class="badge bg-danger">No</span>
-                                @endif
-                            </p>
-                            <p class="card-text">{{ $borrow->ReturnDate ?? 'Null' }}</p>
-
-                            <p class="card-text">{{ $borrow->Emmo ?? 'Null' }}</p>
-                            <p class="card-text">
-                                @if ($borrow->IsHidden == 0)
-                                    <span class="badge bg-danger">Hided</span>
-                                @else
-                                    <span class="badge bg-success">Show</span>
-                                @endif
-                            </p>
-                        </div>
+                                </b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Return Date:</b> <b
+                                    class="float-right mr-5">{{ $borrow->ReturnDate ?? 'Null' }}</b>
+                            </li>
+                            <li class="list-group-item">
+                                <b class="ml-5">Emmo:</b> <b
+                                    class="float-right mr-5">{{ $borrow->Emmo ?? 'Null' }}</b>
+                            </li>
+                        </ul>
                     </div>
+                    <!-- /.card-body -->
                 </div>
             </div>
             <div class="modal-footer">

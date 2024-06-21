@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id('BookId');
             // $table->string('BookName', 60);
             $table->string('BookCode', 60)->unique();
-            $table->unsignedBigInteger('CatalogId');
-            $table->foreign('CatalogId')->references('CatalogId')->on('catalogs')->onDelete('cascade');
+            $table->unsignedBigInteger('CatalogId')->nullable();
+            $table->foreign('CatalogId')->references('CatalogId')->on('catalogs');
             $table->text('BookImage')->nullable();
             $table->string('BookDescription', 50);
             $table->boolean('IsHidden')->default(false);

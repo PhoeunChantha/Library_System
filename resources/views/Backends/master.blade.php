@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 @include('Backends.Partials.Link')
+<style>
+    /* body {
+        font-family: Arial !important;
+    } */
 
-<body class="hold-transition sidebar-mini layout-fixed">
+</style>
+{{-- <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed"> --}}
+
+<body class=" sidebar-mini layout-fixed layout-navbar-fixed ">
     <div class="wrapper">
-
-        {{-- <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{asset('AdminLTE')}}/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-        </div> --}}
-
         <!-- Navbar -->
         @include('Backends.Partials.Navbar')
         <!-- /.navbar -->
@@ -19,27 +20,9 @@
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            {{-- <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row ">
-                        <div class="col-sm-6">
-                            <h1 id="greeting">Hello, @auth {{ Auth::user()->name }} @endauth
-                            </h1>
-                            @if (Session::has('login_time'))
-                                {{ \Carbon\Carbon::parse(Session::get('login_time'))->format('l, F j, Y h:i A') }}
-                            @endif
-                        </div><!-- /.col -->
-                        <div class="banner p-3 d-flex justify-content-center">
-                            <img src="/Login_images/banner.jpg" width="90%" height="80%" alt="image">
-                        </div>
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div> --}}
-            <!-- /.content-header -->
 
             <!-- Main content -->
-            <section class="content">
+            <section class="contentt">
                 <div class="container-fluid">
                     @yield('content')
                 </div><!-- /.container-fluid -->
@@ -65,19 +48,7 @@
     <!-- ./wrapper -->
 
     @include('Backends.Partials.Script')
-    <script>
-        $(document).ready(function() {
-            $('#librarianTable').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": true,
-                "ordering": false,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true
-            });
-        });
-    </script>
+
     {{-- <script>
         function updateDateTime() {
             const now = new Date();
@@ -98,4 +69,5 @@
     </script> --}}
 
 </body>
+
 </html>

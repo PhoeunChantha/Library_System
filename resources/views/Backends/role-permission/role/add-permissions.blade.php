@@ -1,5 +1,6 @@
 @extends('Backends.master')
 @section('content')
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
@@ -14,7 +15,7 @@
 </section>
 <div class="container">
     <div class="row justify-centent-center">
-        <div class="col-md-12 mt-5">
+        <div class="col-md-12 ">
             @if (session('status'))
                 <div class="alert alert-success">{{session('status')}}</div>
             @endif
@@ -35,12 +36,13 @@
                             <label for="name">Permission</label>
                             <div class="row ">
                                 @foreach ($permissions as $permission)
-                                <div class="col-md-3  ">
+                                <div class="col-md-3">
                                     <label class="form-switch">
                                         <input
                                         class="form-check-input"
                                         type="checkbox"
                                         role="switch"
+
                                         name="permission[]"
                                         value="{{ $permission->name }}"
                                         {{in_array($permission->id, $rolepermissions ) ? 'checked' : '' }}

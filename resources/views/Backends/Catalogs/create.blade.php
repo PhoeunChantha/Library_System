@@ -19,18 +19,18 @@
             </div>
         </div>
     </section>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card ">
-                    <div class="card-header">Catalogs Informaion</div>
+                    <div class="card-header"  style="background-color:  rgba(173, 72, 0, 1)">Catalogs Informaion</div>
 
                     <div class="card-body">
                         <form class="row" method="POST" action="{{ route('catalog.store') }}"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="form-group col-md-6">
-                                <label for="CatalogCode">Catalog Code</label>
+                                <label for="CatalogCode" class="form-label required">Catalog Code</label>
                                 <input type="text" name="CatalogCode" id="CatalogCode" autocomplete="off" class="form-control"
                                     value="{{ old('CatalogCode') }}">
                                 @error('CatalogCode')
@@ -38,7 +38,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="CatalogName">Catalog Name</label>
+                                <label for="CatalogName" class="form-label required">Catalog Name</label>
                                 <input type="text" name="CatalogName" id="CatalogName" class="form-control"
                                     value="{{ old('CatalogName') }}">
                                 @error('CatalogName')
@@ -54,7 +54,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="AuthorName">Author Name</label>
+                                <label for="AuthorName" class="form-label required">Author Name</label>
                                 <input type="text" name="AuthorName" id="AuthorName" class="form-control"
                                     value="{{ old('AuthorName') }}">
                                 @error('AuthorName')
@@ -85,8 +85,10 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="form-group col-md-6">
+                            </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary col-1 ml-2">Save</button>
+                                <button type="submit" class="btn btn-primary ml-2">Save</button>
                             </div>
                         </form>
                     </div>

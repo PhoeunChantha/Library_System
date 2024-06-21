@@ -1,5 +1,11 @@
 @extends('Backends.master')
 @section('content')
+<style>
+      .dataTables_length select {
+            width: auto; /* Auto width based on content */
+            min - width: 80 px; /* Minimum width */
+        }
+</style>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -14,21 +20,21 @@
     </section>
     <!-- /.card -->
     <div class="card ">
-        <div class="card-header">
+        <div class="card-header" style="background-color:  rgba(173, 72, 0, 1)">
             <h3 class="card-title">Catalog</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <table id="catalogTable" class="table  table-hover">
+            <table id="catalogTable" class="table  table-hover text-nowrap table-responsive">
                 @can('create catalog')
-                    <a href="{{ route('catalog.create') }}" class="btn btn-info btn-sm mb-2"><i class="fa-solid fa-plus fa-xl"
-                            style="color: #1567f4;"></i>Add</a>
+                    <a href="{{ route('catalog.create') }}" class="btn btn-info float-right"> <i class="fa fa-plus-circle"></i>
+                        New</a>
                 @endcan
 
-                @can('show hide')
+                {{-- @can('show hide')
                     <button type="button" id="showAllBtn" class="btn btn-sm bg-gradient-success float-end">Show All
                     </button>
-                @endcan
+                @endcan --}}
                 <thead>
                     <tr>
                         <th>#</th>
@@ -45,7 +51,8 @@
                 </thead>
                 <tbody>
                     @foreach ($catalogs as $item)
-                        <tr class="catalogRow" @if ($item->IsHidden == 0) style="display:none;" @endif>
+                        {{-- <tr class="catalogRow" @if ($item->IsHidden == 0) style="display:none;" @endif> --}}
+                        <tr class="catalogRow" @if ($item->IsHidden == 0) @endif>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->CatalogCode }}</td>
                             <td>{{ $item->CatalogName }}</td>
@@ -96,42 +103,9 @@
         </div>
         <!-- /.card-body -->
     </div>
-    <script>
-        // Close the alert after 5 seconds (5000 milliseconds)
-        setTimeout(function() {
-            document.getElementById('statusAlert').style.display = 'none';
-        }, 5000); // Adjust the time as needed (5 seconds in this case)
-    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            let showAll = false; // Flag to track the state of the button
-
-            // Initially hide rows where IsHidden is 0
-            $('.catalogRow').each(function() {
-                if (!$(this).find('input.IsHidden').prop('checked')) {
-                    $(this).hide();
-                }
-            });
-
-            $('#showAllBtn').click(function() {
-                showAll = !showAll; // Toggle the flag
-
-                if (showAll) {
-                    // Show all rows
-                    $('.catalogRow').show();
-                } else {
-                    // Hide rows where IsHidden is 0
-                    $('.catalogRow').each(function() {
-                        if (!$(this).find('input.IsHidden').prop('checked')) {
-                            $(this).hide();
-                        }
-                    });
-                }
-            });
-        });
-    </script>
+   
     <script>
         $(document).ready(function() {
             $('input.IsHidden').on('change', function() {
@@ -163,16 +137,32 @@
             });
         });
     </script>
-    <script>
+     <script>
         $(document).ready(function() {
             $('#catalogTable').DataTable({
                 "paging": true,
-                "lengthChange": false,
-                "searching": true,
-                "ordering": false,
+                "lengthChange": true,
+                "language": {
+                    "search": "",
+                    "searchPlaceholder": "    Search for something...",
+                },
+                "ordering": true,
                 "info": true,
                 "autoWidth": false,
-                "responsive": true
+                "responsive": false
+            });
+
+            // Center the search input
+            var searchInput = $('div.dataTables_filter input');
+            var searchInputParent = searchInput.parent();
+            searchInputParent.css({
+                'width': '100%',
+                'text-align': 'left'
+            });
+            searchInput.css({
+                'display': 'inline-block',
+                'width': '10cm',
+                'height': '1cm'
             });
         });
     </script>

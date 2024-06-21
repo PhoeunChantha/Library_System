@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Book;
+use App\Models\User;
 use App\Models\Borrow;
 use App\Models\Customer;
 use App\Models\Librarian;
@@ -11,11 +12,12 @@ use App\Models\BorrowDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class BorrowController extends Controller
 {
-
+  
     public function index()
     {
         // Fetch all BorrowDetails
@@ -36,8 +38,16 @@ class BorrowController extends Controller
             }
         }
 
+        $user = Auth::user();
+        if($user->hasRole('super-admin')){
+
+            $borrows = Borrow::with(['customer', 'user', 'borrowDetails.book.catalog'])->get();
+
+        }else{
+
+            $borrows = Borrow::where('UserId',$user->id)->with(['customer', 'user', 'borrowDetails.book.catalog'])->get();
+        }
         // Fetch other necessary data
-        $borrows = Borrow::with(['customer', 'librarian', 'borrowDetails.book.catalog'])->get();
         $customers = Customer::all();
         $librarians = Librarian::all();
         $totalBorrows = $borrows->count();
@@ -55,21 +65,21 @@ class BorrowController extends Controller
 
     public function create()
     {
+        $user = Auth::user();
         $books = Book::all();
         $borrows = Borrow::all();
-        $customers = Customer::all();
-        $librarians = Librarian::all();
+        $customers = Customer::where('IsHidden','1')->get();
         $borrowedBookIds = BorrowDetail::where('IsReturn', '1')->pluck('book_ids')->flatten()->unique()->toArray();
         $books = Book::where('IsHidden', 1)
             ->whereNotIn('BookId', $borrowedBookIds)
             ->get();
-        return view('Backends.Borrows.create', compact('books', 'borrows', 'customers', 'librarians'));
+        return view('Backends.Borrows.create', compact('user','books', 'borrows', 'customers'));
     }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'CustomerId' => 'required|exists:customers,CustomerId',
-            'LibrarianId' => 'required|exists:librarians,LibrarianId',
+           // 'UserId' => 'required',
             'BorrowDate' => 'required|date',
             'BorrowCode' => 'required|unique:borrows,BorrowCode',
             'Depositamount' => 'nullable|numeric|regex:/^\d{1,10}(\.\d{1,2})?$/',
@@ -96,10 +106,12 @@ class BorrowController extends Controller
         try {
             DB::beginTransaction();
 
+            $userId = Auth::user()->id;
+
             $borrow = new Borrow();
             $borrow->BorrowId = $request->BorrowId;
             $borrow->CustomerId = $request->input('CustomerId');
-            $borrow->LibrarianId = $request->input('LibrarianId');
+            $borrow->UserId = $userId;
             $borrow->BorrowDate = $request->input('BorrowDate');
             $borrow->BorrowCode = $request->BorrowCode;
             $borrow->Depositamount = $request->input('Depositamount');
@@ -130,25 +142,25 @@ class BorrowController extends Controller
                 'msg' => __('Created successfully')
             ];
         } catch (Exception $ex) {
-            // dd($ex);
-            DB::rollBack();
-            $output = [
-                'success' => 0,
-                'msg' => __('Something went wrong')
-            ];
+           dd($ex);
+            // DB::rollBack();
+            // $output = [
+            //     'success' => 0,
+            //     'msg' => __('Something went wrong')
+            // ];
         }
 
         return redirect()->route('borrow.index')->with($output);
     }
     public function edit($id)
     {
+        $user = Auth::user();
         $books = Book::all();
         $borrows = Borrow::all();
         $customers = Customer::all();
-        $librarians = Librarian::all();
         $borrow = Borrow::findOrFail($id);
         $borrowdetail = BorrowDetail::where('BorrowId', $id)->firstOrFail();
-        return view('Backends.Borrows.edit', compact('customers', 'books', 'borrows', 'borrow', 'borrowdetail', 'librarians'));
+        return view('Backends.Borrows.edit', compact('customers', 'books', 'borrows', 'borrow', 'borrowdetail', 'user'));
     }
     // public function update(Request $request, $id)
     // {
@@ -344,8 +356,7 @@ class BorrowController extends Controller
     public function show($id)
     {
         $borrow = Borrow::findOrFail($id);
-        $data = Borrow::with('customer')->get();
-        $data = Borrow::with('librarian')->get();
+        $data = Borrow::with(['customer','user'])->get();
         return view('Backends.Borrows.show', compact('borrow'));
     }
 
@@ -375,7 +386,6 @@ class BorrowController extends Controller
         // Validate the request data
         $request->validate([
             'CustomerId' => 'required',
-            'LibrarianId' => 'required',
             'BorrowDate' => 'required|date',
             'BorrowCode' => 'required|unique:borrows,BorrowCode,' . $id . ',BorrowId|max:60',
             'Depositamount' => 'nullable|numeric',
@@ -394,7 +404,7 @@ class BorrowController extends Controller
             $borrow = Borrow::findOrFail($id);
             $borrow->update([
                 'CustomerId' => $request->CustomerId,
-                'LibrarianId' => $request->LibrarianId,
+                'UserId' => Auth::user()->id,
                 'BorrowDate' => $request->BorrowDate,
                 'BorrowCode' => $request->BorrowCode,
                 'Depositamount' => $request->Depositamount,

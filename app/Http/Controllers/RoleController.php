@@ -47,7 +47,7 @@ class RoleController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('Created successfully')
+                'msg' => __('Role created successfully')
             ];
         } catch (Exception $ex) {
             DB::rollBack();
@@ -81,7 +81,7 @@ class RoleController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('Updated successfully')
+                'msg' => __('Role updated successfully')
             ];
             return redirect('roles')->with($output);
         } catch (Exception $ex) {
@@ -106,7 +106,7 @@ class RoleController extends Controller
             // Redirect back to the book index page with a success message
             $output = [
                 'success' => 1,
-                'msg' => __('Deleted successfully.')
+                'msg' => __('Role Deleted successfully.')
             ];
             return redirect('roles')->with($output);
         } catch (Exception $ex) {

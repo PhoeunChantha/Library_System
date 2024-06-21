@@ -14,6 +14,7 @@ use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\BorrowDetailController;
 use App\Http\Controllers\CustomerTypeController;
+use FontLib\Table\Type\name;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,26 +30,27 @@ use App\Http\Controllers\CustomerTypeController;
 Route::get('/', function () {
     return view('auth.login');
 });
-Route::group(['middleware' => ['auth', 'isAdmin']], function () {
+// Route::group(['middleware' => ['auth' , 'isAdmin']], function () {
+Route::middleware(['auth', 'isAdmin'])->group(function () {
     //Permission
-    Route::resource('permissions', App\Http\Controllers\PermissionController::class);
-    Route::get('permissions/create', [App\Http\Controllers\PermissionController::class, 'create'])->middleware('can:create permission');
-    Route::get('permissions/{permission}/edit', [App\Http\Controllers\PermissionController::class, 'edit'])->middleware('can:update permission');
+    Route::resource('permissions', PermissionController::class);
+    Route::get('permissions/create', [PermissionController::class, 'create'])->name('permissions.create')->middleware('can:create permission');
+    Route::get('permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit')->middleware('can:update permission');
     Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy']);
 
     //Role
-    Route::resource('roles', App\Http\Controllers\RoleController::class);
-    Route::get('roles/create', [App\Http\Controllers\RoleController::class, 'create'])->middleware('can:create role');
-    Route::get('roles/{role}/edit', [App\Http\Controllers\RoleController::class, 'edit'])->middleware('can:update role');
+    Route::resource('roles', RoleController::class);
+    Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create')->middleware('can:create role');
+    Route::get('roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit')->middleware('can:update role');
     Route::get('roles/{roleId}/delete', [RoleController::class, 'destroy']);
-    Route::get('roles/{roleId}/give-permissions', [RoleController::class, 'AddPermissionToRole']);
-    Route::put('roles/{roleId}/give-permissions', [RoleController::class, 'UpdatePermissionToRole']);
+    Route::get('roles/{roleId}/give-permissions', [RoleController::class, 'AddPermissionToRole'])->name('AddPermissionToRole');
+    Route::put('roles/{roleId}/give-permissions', [RoleController::class, 'UpdatePermissionToRole'])->name('UpdatePermissionToRole');
 
     //Users
-    Route::resource('users', App\Http\Controllers\UserController::class);
-    Route::get('users/create', [App\Http\Controllers\UserController::class, 'create'])->middleware('can:create user');
-    Route::get('users/{user}/edit', [App\Http\Controllers\UserController::class, 'edit'])->middleware('can:update user');
-
+    Route::resource('users', UserController::class);
+    Route::get('users/create', [UserController::class, 'create'])->name('users.create')->middleware('can:create user');
+    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('can:update user');
+    Route::put('users', [UserController::class, 'updateStatus'])->name('user.update_Status');
     Route::get('users/{userId}/delete', [UserController::class, 'destroy']);
 
     //Dashboard
@@ -104,27 +106,151 @@ Route::group(['middleware' => ['auth', 'isAdmin']], function () {
     Route::put('librarian/update_IsHidden', [LibrarianController::class, 'updateStatus'])->name('librarian.update_IsHidden');
 
     //Borrow
-    Route::get('/borrow/index', [BorrowController::class, 'index'])->name('borrow.index');
-    Route::get('/borrow/create', [BorrowController::class, 'create'])->name('borrow.create')->middleware('can:create borrow');
-    Route::post('/borrow/index', [BorrowController::class, 'store'])->name('borrow.store');
-    Route::get('/borrows/edit/{id}', [BorrowController::class, 'edit'])->name('borrow.edit')->middleware('can:update borrow');
-    Route::put('/borrow/update/{id}', [BorrowController::class, 'update'])->name('borrow.update');
-    Route::delete('/borrow/{id}', [BorrowController::class, 'destroy'])->name('borrow.destroy');
-    Route::get('/borrow/show/{id}', [BorrowController::class, 'show'])->name('borrow.show')->middleware('can:view borrow');
-    Route::put('borrow/update_IsHidden', [BorrowController::class, 'updateStatus'])->name('borrow.update_IsHidden');
-    //update borrow and borrowdetail
-    Route::put('/borrows/updateBoth/{id}', [BorrowController::class, 'updateBoth'])->name('borrow.updateBoth');
+    // Route::group(['prefix' => 'admin', 'as' => 'borrow.'],function(){
+    //     Route::get('/index', [BorrowController::class, 'index'])->name('index');
+    //     Route::get('/create', [BorrowController::class, 'create'])->name('create')->middleware('can:create borrow');
+    //     Route::post('/index', [BorrowController::class, 'store'])->name('store');
+    //     Route::get('/edit/{id}', [BorrowController::class, 'edit'])->name('edit')->middleware('can:update borrow');
+    //     Route::put('/update/{id}', [BorrowController::class, 'update'])->name('update');
+    //     Route::delete('/{id}', [BorrowController::class, 'destroy'])->name('destroy');
+    //     Route::get('/show/{id}', [BorrowController::class, 'show'])->name('show')->middleware('can:view borrow');
+    //     Route::put('borrow/update_IsHidden', [BorrowController::class, 'updateStatus'])->name('update_IsHidden');
+    //     //update borrow and borrowdetail
+    //     Route::put('/updateBoth/{id}', [BorrowController::class, 'updateBoth'])->name('updateBoth');
+    // });
+    Route::group(['prefix' => 'borrow', 'as' => 'borrow.'], function () {
+        Route::get('/index', [BorrowController::class, 'index'])->name('index');
+        Route::get('/create', [BorrowController::class, 'create'])->name('create')->middleware('can:create borrow');
+        Route::post('/index', [BorrowController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [BorrowController::class, 'edit'])->name('edit')->middleware('can:update borrow');
+        Route::put('/update/{id}', [BorrowController::class, 'update'])->name('update');
+        Route::delete('/{id}', [BorrowController::class, 'destroy'])->name('destroy');
+        Route::get('/show/{id}', [BorrowController::class, 'show'])->name('show')->middleware('can:view borrow');
+        Route::put('borrow/update_IsHidden', [BorrowController::class, 'updateStatus'])->name('update_IsHidden');
+        Route::put('/updateBoth/{id}', [BorrowController::class, 'updateBoth'])->name('updateBoth');
+    });
+
+
 
 
     //BorrowDetail
-    Route::get('/borrowdetail/index', [BorrowDetailController::class, 'index'])->name('borrowdetail.index');
-    Route::get('/borrowdetail/create', [BorrowDetailController::class, 'create'])->name('borrowdetail.create')->middleware('can:create borrowdetail');
-    Route::post('/borrowdetail/index', [BorrowDetailController::class, 'store'])->name('borrowdetail.store');
-    Route::get('/borrowdetail/edit/{id}', [BorrowDetailController::class, 'edit'])->name('borrowdetail.edit')->middleware('can:update borrowdetail');
-    Route::put('/borrowdetail/update/{id}', [BorrowDetailController::class, 'update'])->name('borrowdetail.update');
-    Route::delete('/borrowdetail/{id}', [BorrowDetailController::class, 'destroy'])->name('borrowdetail.destroy');
-    Route::get('/borrowdetail/show/{id}', [BorrowDetailController::class, 'show'])->name('borrowdetail.show')->middleware('can:view borrowdetail');
+    Route::group(['prefix' => 'borrowdetail', 'as' => 'borrowdetail.'], function () {
+        Route::get('/index', [BorrowDetailController::class, 'index'])->name('index');
+        Route::get('/create', [BorrowDetailController::class, 'create'])->name('create')->middleware('can:create borrowdetail');
+        Route::post('/index', [BorrowDetailController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [BorrowDetailController::class, 'edit'])->name('edit')->middleware('can:update borrowdetail');
+        Route::put('/update/{id}', [BorrowDetailController::class, 'update'])->name('update');
+        Route::delete('/{id}', [BorrowDetailController::class, 'destroy'])->name('destroy');
+        Route::get('/show/{id}', [BorrowDetailController::class, 'show'])->name('show')->middleware('can:view borrowdetail');
+    });
 });
+
+// Route::middleware(['auth', 'isAdmin'])->group(function () {
+
+//     // Permission routes
+//     Route::resource('permissions', PermissionController::class);
+//     Route::get('permissions/create', [PermissionController::class, 'create'])->middleware('can:create permission');
+//     Route::get('permissions/{permission}/edit', [PermissionController::class, 'edit'])->middleware('can:update permission');
+//     Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy']);
+
+//     // Role routes
+//     Route::resource('roles', RoleController::class);
+//     Route::get('roles/create', [RoleController::class, 'create'])->middleware('can:create role');
+//     Route::get('roles/{role}/edit', [RoleController::class, 'edit'])->middleware('can:update role');
+//     Route::get('roles/{roleId}/delete', [RoleController::class, 'destroy']);
+//     Route::get('roles/{roleId}/give-permissions', [RoleController::class, 'AddPermissionToRole']);
+//     Route::put('roles/{roleId}/give-permissions', [RoleController::class, 'UpdatePermissionToRole']);
+
+//     // User routes
+//     Route::resource('users', UserController::class);
+//     Route::get('users/create', [UserController::class, 'create'])->middleware('can:create user');
+//     Route::get('users/{user}/edit', [UserController::class, 'edit'])->middleware('can:update user');
+//     Route::put('users', [UserController::class, 'updateStatus'])->name('user.update_Status');
+//     Route::get('users/{userId}/delete', [UserController::class, 'destroy']);
+
+//     // Dashboard route
+//     Route::get('/dashboard', [DashboardController::class, 'index'])->name('front.home');
+
+//     // Customer routes
+//     Route::prefix('customer')->name('customer.')->group(function () {
+//         Route::get('/index', [CustomerController::class, 'index'])->name('index');
+//         Route::get('/create', [CustomerController::class, 'create'])->name('create')->middleware('can:create customer');
+//         Route::post('/index', [CustomerController::class, 'store'])->name('store');
+//         Route::get('/edit/{id}', [CustomerController::class, 'edit'])->name('edit')->middleware('can:update customer');
+//         Route::put('/update/{id}', [CustomerController::class, 'update'])->name('update');
+//         Route::delete('/{id}', [CustomerController::class, 'destroy'])->name('destroy');
+//         Route::get('/show/{id}', [CustomerController::class, 'show'])->name('show')->middleware('can:view customer');
+//         Route::put('/update_IsHidden', [CustomerController::class, 'updateStatus'])->name('update_IsHidden');
+//     });
+
+//     // CustomerType routes
+//     Route::prefix('customertype')->name('customertype.')->group(function () {
+//         Route::get('/index', [CustomerTypeController::class, 'index'])->name('index');
+//         Route::get('/create', [CustomerTypeController::class, 'create'])->name('create')->middleware('can:create customertype');
+//         Route::post('/index', [CustomerTypeController::class, 'store'])->name('store');
+//         Route::delete('/{id}', [CustomerTypeController::class, 'destroy'])->name('destroy');
+//     });
+
+//     // Book routes
+//     Route::prefix('book')->name('book.')->group(function () {
+//         Route::get('/index', [BookController::class, 'index'])->name('index');
+//         Route::get('/create', [BookController::class, 'create'])->name('create')->middleware('can:create book');
+//         Route::post('/index', [BookController::class, 'store'])->name('store');
+//         Route::get('/edit/{id}', [BookController::class, 'edit'])->name('edit')->middleware('can:update book');
+//         Route::put('/update/{id}', [BookController::class, 'update'])->name('update');
+//         Route::delete('/{id}', [BookController::class, 'destroy'])->name('destroy');
+//         Route::get('/show/{id}', [BookController::class, 'show'])->name('show')->middleware('can:view book');
+//         Route::put('/update_IsHidden', [BookController::class, 'updateStatus'])->name('update_IsHidden');
+//     });
+
+//     // Catalog routes
+//     Route::prefix('catalog')->name('catalog.')->group(function () {
+//         Route::get('/index', [CatalogController::class, 'index'])->name('index');
+//         Route::get('/create', [CatalogController::class, 'create'])->name('create')->middleware('can:create catalog');
+//         Route::post('/index', [CatalogController::class, 'store'])->name('store');
+//         Route::get('/edit/{id}', [CatalogController::class, 'edit'])->name('edit')->middleware('can:update catalog');
+//         Route::put('/update/{id}', [CatalogController::class, 'update'])->name('update');
+//         Route::delete('/{id}', [CatalogController::class, 'destroy'])->name('destroy');
+//         Route::get('/show/{id}', [CatalogController::class, 'show'])->name('show')->middleware('can:view catalog');
+//         Route::put('/update_IsHidden', [CatalogController::class, 'updateStatus'])->name('update_IsHidden');
+//     });
+
+//     // Librarian routes
+//     Route::prefix('librarian')->name('librarian.')->group(function () {
+//         Route::get('/index', [LibrarianController::class, 'index'])->name('index');
+//         Route::get('/create', [LibrarianController::class, 'create'])->name('create')->middleware('can:create librarian');
+//         Route::post('/index', [LibrarianController::class, 'store'])->name('store');
+//         Route::get('/edit/{id}', [LibrarianController::class, 'edit'])->name('edit')->middleware('can:update librarian');
+//         Route::put('/update/{id}', [LibrarianController::class, 'update'])->name('update');
+//         Route::delete('/{id}', [LibrarianController::class, 'destroy'])->name('destroy');
+//         Route::get('/show/{id}', [LibrarianController::class, 'show'])->name('show')->middleware('can:view librarian');
+//         Route::put('/update_IsHidden', [LibrarianController::class, 'updateStatus'])->name('update_IsHidden');
+//     });
+
+//     // Borrow routes
+//     Route::prefix('admin/borrow')->name('admin.borrow.')->group(function () {
+//         Route::get('/index', [BorrowController::class, 'index'])->name('index');
+//         Route::get('/create', [BorrowController::class, 'create'])->name('create')->middleware('can:create borrow');
+//         Route::post('/index', [BorrowController::class, 'store'])->name('store');
+//         Route::get('/edit/{id}', [BorrowController::class, 'edit'])->name('edit')->middleware('can:update borrow');
+//         Route::put('/update/{id}', [BorrowController::class, 'update'])->name('update');
+//         Route::delete('/{id}', [BorrowController::class, 'destroy'])->name('destroy');
+//         Route::get('/show/{id}', [BorrowController::class, 'show'])->name('show')->middleware('can:view borrow');
+//         Route::put('/update_IsHidden', [BorrowController::class, 'updateStatus'])->name('update_IsHidden');
+//         Route::put('/updateBoth/{id}', [BorrowController::class, 'updateBoth'])->name('updateBoth');
+//     });
+
+//     // BorrowDetail routes
+//     Route::prefix('borrowdetail')->name('borrowdetail.')->group(function () {
+//         Route::get('/index', [BorrowDetailController::class, 'index'])->name('index');
+//         Route::get('/create', [BorrowDetailController::class, 'create'])->name('create')->middleware('can:create borrowdetail');
+//         Route::post('/index', [BorrowDetailController::class, 'store'])->name('store');
+//         Route::get('/edit/{id}', [BorrowDetailController::class, 'edit'])->name('edit')->middleware('can:update borrowdetail');
+//         Route::put('/update/{id}', [BorrowDetailController::class, 'update'])->name('update');
+//         Route::delete('/{id}', [BorrowDetailController::class, 'destroy'])->name('destroy');
+//         Route::get('/show/{id}', [BorrowDetailController::class, 'show'])->name('show')->middleware('can:view borrowdetail');
+//     });
+// });
 
 Auth::routes();
 

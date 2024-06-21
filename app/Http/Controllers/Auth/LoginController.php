@@ -51,7 +51,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        if (!$user->hasRole(['super-admin', 'admin', 'staff','user'])) {
+        if (!$user->hasRole(['super-admin', 'admin', 'staff', 'user'])) {
             Auth::logout(); // Log out the user
             return redirect()->route('unauthorized'); // Redirect to unauthorized page
         }
@@ -98,12 +98,23 @@ class LoginController extends Controller
      */
     protected function sendFailedLoginResponse(Request $request)
     {
+        $errors = [];
+
+        if (!Auth::attempt($request->only($this->username(), 'password'))) {
+            $errors[$this->username()] = [trans('auth.failed')];
+            $errors['password'] = [trans('auth.failed')];
+        }
+
+        if (isset($errors) && count($errors) > 0) {
+            throw ValidationException::withMessages($errors);
+        }
+
+
         throw ValidationException::withMessages([
-            'name' => [trans('auth.failed')],
             'email' => [trans('auth.failed')],
-            'password' => [trans('auth.failed')],
         ]);
     }
+
 
     /**
      * Get the login username to be used by the controller.
@@ -113,5 +124,13 @@ class LoginController extends Controller
     public function username()
     {
         return 'name';
+    }
+    public function email()
+    {
+        return 'email';
+    }
+    public function password()
+    {
+        return 'password';
     }
 }

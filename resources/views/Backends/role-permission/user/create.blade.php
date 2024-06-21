@@ -31,80 +31,91 @@
             </div>
         </div>
     </section>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <!-- Adjust the column width as needed -->
-                <div class="card">
-                    <div class="card-header">
-                        User Information
+    <div class="container-fluid">
+        <!-- Adjust the column width as needed -->
+        <div class="card">
+            <div class="card-header" style="background-color:  rgba(173, 72, 0, 1)">
+                User Information
+            </div>
+            <div class="card-body">
+                <form class="row" action="{{ url('users') }}" method="POST" onsubmit="return validatePassword()"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group col-md-6">
+                        <label for="name" class="required">User Name</label>
+                        <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror"  />
+                        @error('name')
+                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                        @enderror
                     </div>
-                    <div class="card-body">
-                        <form class="row" action="{{ url('users') }}" method="POST"
-                            onsubmit="return validatePassword()" enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group col-md-6">
-                                <label for="name">User Name</label>
-                                <input type="text" name="name" class="form-control" required />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="email">Email</label>
-                                <input type="email" name="email" class="form-control" required />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="password">Password</label>
-                                <div class="input-group">
-                                    <input type="password" name="password" class="form-control" id="password" required
-                                        minlength="8" maxlength="20" pattern=".{8,20}"
-                                        title="Password must be between 8 and 20 characters" />
-                                    <button type="button" class="btn btn-outline-secondary toggle-password"
-                                        onclick="togglePasswordVisibility()">
-                                        <i class="fas fa-eye-slash"></i>
-                                    </button>
-                                </div>
-                                <small id="password-error" class="text-danger" style="display: none;">Password must be
-                                    between 8 and 20 characters</small>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="confirm_password">Confirm Password</label>
-                                <input type="password" name="confirm_password" class="form-control" id="confirm_password"
-                                    required />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="roles">Role</label>
-                                <select class="form-control select2" name="roles[]" id="roles" required>
-                                    <option value="select_role">Select Role</option>
-                                    @foreach ($roles as $role)
-                                        <option value="{{ $role }}">{{ $role }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="Profile"> Profile</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" name="profile" id="exampleInputFile"
-                                            accept="image/*" onchange="previewImage(event)" >
-                                        <label class="custom-file-label" id="fileLabel" for="exampleInputFile">Choose
-                                            Profile</label>
-                                    </div>
-                                </div>
-                                <div class="preview text-center border rounded mt-2"
-                                    style="height: 150px; display: flex; justify-content: center; align-items: center;">
-                                    <img id="preview" src="#" alt="Preview"
-                                        style="display: none; max-width: 200px; max-height: 200px; margin: auto; margin-top: 10px;">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </form>
+                    <div class="form-group col-md-6">
+                        <label for="email" class="required">Email</label>
+                        <input type="email" name="email" class="form-control  @error('email') is-invalid @enderror" />
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                        @enderror
                     </div>
-                </div>
-                <a href="{{ url('users') }}" class="back"><i class="fa-solid fa-arrow-left mr-2"></i>back to
-                    list</a>
+                    <div class="form-group col-md-6">
+                        <label for="password" class="required">Password</label>
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control  @error('password') is-invalid @enderror" id="password" minlength="8"
+                                maxlength="20" pattern=".{8,20}" title="Password must be between 8 and 20 characters" />
+                            <button type="button" class="btn btn-outline-secondary toggle-password"
+                                onclick="togglePasswordVisibility()">
+                                <i class="fas fa-eye-slash"></i>
+                            </button>
+                            @error('password')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <small id="password-error" class="text-danger" style="display: none;">Password must be
+                            between 8 and 20 characters</small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="confirm_password" class="required">Confirm Password</label>
+                        <input type="password" name="confirm_password"  class="form-control  @error('confirm_password') is-invalid @enderror" id="confirm_password" required />
+                        @error('confirm_password')
+                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="roles" class="required">Role</label>
+                        <select class="form-control select2  @error('roles') is-invalid @enderror" name="roles[]" id="roles" required>
+                            <option value="select_role">Select Role</option>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role }}">{{ $role }}</option>
+                            @endforeach
+                        </select>
+                        @error('roles')
+                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="Profile"> Profile</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="profile" id="exampleInputFile"
+                                    accept="image/*" onchange="previewImage(event)">
+                                <label class="custom-file-label" id="fileLabel" for="exampleInputFile">Choose
+                                    Profile</label>
+                            </div>
+                        </div>
+                        <div class="preview text-center border rounded mt-2"
+                            style="height: 150px; display: flex; justify-content: center; align-items: center;">
+                            <img id="preview" src="#" alt="Preview"
+                                style="display: none; max-width: 200px; max-height: 200px; margin: auto; margin-top: 10px;">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary float-right"> <i class="fa fa-save"></i>
+                            {{ __('Save') }}</button>
+                    </div>
+                </form>
             </div>
         </div>
+        <a href="{{ url('users') }}" class="back"><i class="fa-solid fa-arrow-left mr-2"></i>back to
+            list</a>
+
     </div>
     <script>
         function togglePasswordVisibility() {

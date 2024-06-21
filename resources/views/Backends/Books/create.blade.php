@@ -37,18 +37,18 @@
             </div>
         </div>
     </section>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center d-flex">
             <div class="col-md-12">
                 <div class="card ">
-                    <div class="card-header">Book Information</div>
+                    <div class="card-header"  style="background-color:  rgba(173, 72, 0, 1)">Book Information</div>
 
                     <div class="card-body">
                         <form method="POST" class="row" action="{{ route('book.store') }}"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="form-group col-md-6">
-                                <label for="BookCode">Book Code</label>
+                                <label for="BookCode"  class="form-label required">Book Code</label>
                                 <input type="text" name="BookCode" id="BookCode"
                                     class="form-control @error('BookCode') is-invalid
                                 @enderror" autocomplete="off">{{ old('BookCode') }}
@@ -59,7 +59,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="required_lable" for="CatalogId">{{ __('Catalog') }}</label>
+                                <label class="form-label required" for="CatalogId">{{ __('Catalog') }}</label>
                                 <select name="CatalogId" id="CatalogId"
                                     class="form-control select2 @error('CatalogId') is-invalid
                                 @enderror"
@@ -102,7 +102,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary col-1 ml-2">Save</button>
+                                <button type="submit" class="btn btn-primary ml-2">Save</button>
                             </div>
                         </form>
                     </div>

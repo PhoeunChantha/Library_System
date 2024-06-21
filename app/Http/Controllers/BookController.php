@@ -20,6 +20,8 @@ class BookController extends Controller
 
         // Fetch all books with their catalog relationships
         $books = Book::with('catalog')->get();
+
+
         $totalItems = $books->count();
 
         // Fetch all borrow details

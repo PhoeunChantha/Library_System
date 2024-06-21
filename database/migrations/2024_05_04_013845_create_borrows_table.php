@@ -13,17 +13,19 @@ return new class extends Migration
     {
         Schema::create('borrows', function (Blueprint $table) {
             $table->id('BorrowId');
-            $table->unsignedBigInteger('CustomerId');
-            $table->foreign('CustomerId')->references('CustomerId')->on('customers')->onDelete('cascade');
-            $table->unsignedBigInteger('LibrarianId');
-            $table->foreign('LibrarianId')->references('LibrarianId')->on('librarians')->onDelete('cascade');
+            $table->unsignedBigInteger('CustomerId')->nullable();
+            $table->foreign('CustomerId')->references('CustomerId')->on('customers');
+            // $table->unsignedBigInteger('LibrarianId');
+            // $table->foreign('LibrarianId')->references('LibrarianId')->on('librarians')->onDelete('cascade');
+            $table->unsignedBigInteger('UserId')->nullable();
+            $table->foreign('id')->references('id')->on('users');
             $table->date('BorrowDate');
             $table->string('BorrowCode', 60)->unique();
             $table->decimal('Depositamount',10, 2)->nullable();
             $table->date('Duedate');
             $table->decimal('FineAmount',10, 2)->nullable();
             $table->string('Emmo', 100)->nullable();
-            $table->boolean('IsHidden')->default(false);
+            $table->boolean('IsHidden')->default(true);
             $table->timestamps();
         });
 

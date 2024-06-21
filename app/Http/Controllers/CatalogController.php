@@ -15,9 +15,10 @@ class CatalogController extends Controller
 {
     public function index()
     {
-        $catalogs = Catalog::all();
+        $catalogs = Catalog::all(); // Fetch catalog items
         return view('Backends.Catalogs.index', compact('catalogs'));
     }
+
     public function create()
     {
         return view('Backends.Catalogs.create');
